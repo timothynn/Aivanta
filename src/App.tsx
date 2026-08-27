@@ -7,6 +7,7 @@ import { Header } from './sections/Header';
 import { Hero } from './sections/Hero';
 import { Industries } from './sections/Industries';
 import { Opportunity } from './sections/Opportunity';
+import { Proof } from './sections/Proof';
 import { Services } from './sections/Services';
 import { Transformation } from './sections/Transformation';
 import { TransformationDemo } from './sections/TransformationDemo';
@@ -24,6 +25,7 @@ export default function App() {
         <Services />
         <Approach />
         <Transformation />
+        <Proof />
         <Industries />
         <WhyAivanta />
         <Contact />
