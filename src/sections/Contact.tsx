@@ -16,8 +16,34 @@ const initialForm: LeadPayload = {
 
 type SubmissionState = 'idle' | 'submitting' | 'success' | 'error';
 
+type AssessmentContext = {
+  system: string;
+  goal: string;
+  data: string;
+  priority: string;
+};
+
+function loadAssessmentContext(): AssessmentContext | null {
+  try {
+    const raw = sessionStorage.getItem('aivanta-assessment');
+    return raw ? (JSON.parse(raw) as AssessmentContext) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function Contact() {
-  const [form, setForm] = useState<LeadPayload>(initialForm);
+  const [form, setForm] = useState<LeadPayload>(() => {
+    const assessment = typeof window !== 'undefined' ? loadAssessmentContext() : null;
+    if (!assessment) return initialForm;
+    return {
+      ...initialForm,
+      goals: ['Assessment'],
+      source: 'homepage_assessment',
+      message: `Assessment context:\nSystem: ${assessment.system}\nPrimary goal: ${assessment.goal}\nAvailable information: ${assessment.data}\nPreferred next step: ${assessment.priority}\n\nWhat I would like Aivanta to improve: `,
+    };
+  });
+  const [assessmentContext] = useState<AssessmentContext | null>(() => (typeof window !== 'undefined' ? loadAssessmentContext() : null));
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -39,6 +65,7 @@ export function Contact() {
 
     try {
       await submitLead(form);
+      sessionStorage.removeItem('aivanta-assessment');
       setForm(initialForm);
       setSubmissionState('success');
     } catch (error) {
@@ -57,6 +84,13 @@ export function Contact() {
             Share the workflow, application, or knowledge problem you want to improve. The first step is a focused
             assessment, not a platform rewrite.
           </p>
+          {assessmentContext ? (
+            <div className="assessment-context" aria-label="Assessment summary">
+              <div><small>Your assessment</small><strong>{assessmentContext.system}</strong></div>
+              <div><small>Goal</small><strong>{assessmentContext.goal}</strong></div>
+              <div><small>Next step</small><strong>{assessmentContext.priority}</strong></div>
+            </div>
+          ) : null}
           <div className="contact-note">
             <Icon name="shield" size={19} />
             <span>No confidential client data is needed for the first conversation.</span>
@@ -67,33 +101,15 @@ export function Contact() {
           <div className="form-grid">
             <label>
               Name
-              <input
-                autoComplete="name"
-                name="name"
-                onChange={(event) => updateField('name', event.target.value)}
-                required
-                value={form.name}
-              />
+              <input autoComplete="name" name="name" onChange={(event) => updateField('name', event.target.value)} required value={form.name} />
             </label>
             <label>
               Work email
-              <input
-                autoComplete="email"
-                name="email"
-                onChange={(event) => updateField('email', event.target.value)}
-                required
-                type="email"
-                value={form.email}
-              />
+              <input autoComplete="email" name="email" onChange={(event) => updateField('email', event.target.value)} required type="email" value={form.email} />
             </label>
             <label>
               Company
-              <input
-                autoComplete="organization"
-                name="company"
-                onChange={(event) => updateField('company', event.target.value)}
-                value={form.company}
-              />
+              <input autoComplete="organization" name="company" onChange={(event) => updateField('company', event.target.value)} value={form.company} />
             </label>
             <label>
               Industry
@@ -123,25 +139,11 @@ export function Contact() {
 
           <label>
             What should AI improve?
-            <textarea
-              name="message"
-              onChange={(event) => updateField('message', event.target.value)}
-              required
-              rows={5}
-              value={form.message}
-            />
+            <textarea name="message" onChange={(event) => updateField('message', event.target.value)} required rows={5} value={form.message} />
           </label>
 
-          {submissionState === 'success' ? (
-            <p className="form-status form-status--success" role="status">
-              Request received. Aivanta will follow up by email.
-            </p>
-          ) : null}
-          {submissionState === 'error' ? (
-            <p className="form-status form-status--error" role="alert">
-              {errorMessage}
-            </p>
-          ) : null}
+          {submissionState === 'success' ? <p className="form-status form-status--success" role="status">Request received. Aivanta will follow up by email.</p> : null}
+          {submissionState === 'error' ? <p className="form-status form-status--error" role="alert">{errorMessage}</p> : null}
 
           <button className="button button--primary button--form" disabled={submissionState === 'submitting'} type="submit">
             {submissionState === 'submitting' ? 'Sending...' : 'Start a conversation'} <Icon name="arrow" size={18} />
