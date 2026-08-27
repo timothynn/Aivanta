@@ -8,6 +8,7 @@ import { Industries } from './sections/Industries';
 import { Opportunity } from './sections/Opportunity';
 import { Services } from './sections/Services';
 import { Transformation } from './sections/Transformation';
+import { TransformationDemo } from './sections/TransformationDemo';
 import { WhyAivanta } from './sections/WhyAivanta';
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
       <main>
         <Hero />
         <Opportunity />
+        <TransformationDemo />
         <Services />
         <Approach />
         <Transformation />
