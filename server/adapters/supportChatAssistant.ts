@@ -2,26 +2,62 @@ import type { AppConfig } from '../config.js';
 import type { ChatAssistant, ChatMessage, ChatResponse } from '../domain/chat.js';
 
 const supportInstructions = [
-  'You are Aivanta Assistant, the customer support chatbot for Aivanta.',
-  'Help visitors understand Aivanta services, the AI transformation process, industries served, and how to start a consultation.',
-  'Be concise, practical, and professional.',
-  'Do not claim a human has been booked or contacted. If the visitor wants follow-up, ask them to use the contact form on the page.',
-  'Do not request confidential client data, credentials, trade secrets, or regulated personal data.',
+  'You are Aivanta Assistant, the AI transformation discovery guide for Aivanta.',
+  'Help visitors identify practical AI opportunities in the software, data, documents, and workflows their business already uses.',
+  'Be concise, practical, professional, and human. Avoid AI hype and avoid making unsupported claims.',
+  'Guide the conversation toward a lightweight discovery brief by learning: the existing application or system, the main workflow or user group involved, the biggest pain point or desired outcome, and the useful information or data sources available.',
+  'Ask one useful discovery question at a time. Do not interrogate the visitor with a long checklist.',
+  'When enough context is available, summarize the opportunity in plain language and suggest a practical starting point such as an assessment, focused pilot, document intelligence capability, assistant, or bounded workflow agent.',
+  'Do not claim a human has been booked or contacted. If the visitor wants follow-up, direct them to the contact form and explain that the conversation context can be carried into it.',
+  'Do not request confidential client data, credentials, trade secrets, regulated personal data, or sensitive production records.',
 ].join(' ');
 
 export class LocalSupportChatAssistant implements ChatAssistant {
   async reply(messages: ChatMessage[]): Promise<ChatResponse> {
-    const latest = messages[messages.length - 1]?.content.toLowerCase() ?? '';
-    const topic = latest.includes('price') || latest.includes('cost')
-      ? 'Pricing depends on scope, existing systems, and risk. The best next step is a focused assessment through the contact form.'
-      : latest.includes('service')
-        ? 'Aivanta helps with AI application assessment, AI integration, agentic workflows, document intelligence, and modernization.'
-        : 'Aivanta helps turn existing software, data, documents, and workflows into practical AI-enabled systems.';
+    const userMessages = messages.filter((message) => message.role === 'user');
+    const latest = userMessages.at(-1)?.content.toLowerCase() ?? '';
+    const turn = userMessages.length;
+
+    if (latest.includes('price') || latest.includes('cost')) {
+      return {
+        message: {
+          role: 'assistant',
+          content: 'Pricing depends on the systems involved, scope, and the level of integration. A focused assessment is usually the best first step. What application or workflow would you most like to improve?',
+        },
+      };
+    }
+
+    if (turn === 1) {
+      return {
+        message: {
+          role: 'assistant',
+          content: 'Aivanta can help add AI to existing applications without starting with a platform rewrite. What system or application would you like to make more intelligent?',
+        },
+      };
+    }
+
+    if (turn === 2) {
+      return {
+        message: {
+          role: 'assistant',
+          content: 'That gives us a starting point. What is the biggest pain point in that workflow today — for example, searching for information, repetitive work, document review, customer support, or a multi-step process?',
+        },
+      };
+    }
+
+    if (turn === 3) {
+      return {
+        message: {
+          role: 'assistant',
+          content: 'Good. What information would the AI need to work with: database records, documents, APIs, emails/files, or another source?',
+        },
+      };
+    }
 
     return {
       message: {
         role: 'assistant',
-        content: `${topic} What workflow or application are you exploring?`,
+        content: 'Based on what you have shared, this looks like a good candidate for a focused AI transformation assessment. I can help turn this conversation into a short project brief for the Aivanta team. Use “Prepare consultation brief” below when you are ready.',
       },
     };
   }
@@ -62,7 +98,7 @@ export class OpenAISupportChatAssistant implements ChatAssistant {
     return {
       message: {
         role: 'assistant',
-        content: outputText || 'I can help with Aivanta services, AI integration, and next steps. What are you exploring?',
+        content: outputText || 'I can help identify a practical AI opportunity. What application or workflow are you exploring?',
       },
     };
   }
@@ -110,7 +146,7 @@ export class GeminiSupportChatAssistant implements ChatAssistant {
     return {
       message: {
         role: 'assistant',
-        content: outputText || 'I can help with Aivanta services, AI integration, and next steps. What are you exploring?',
+        content: outputText || 'I can help identify a practical AI opportunity. What application or workflow are you exploring?',
       },
     };
   }
