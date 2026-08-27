@@ -5,7 +5,7 @@ type LogoProps = {
 };
 
 export function Logo({ variant = 'light', markOnly = false, className = '' }: LogoProps) {
-  const src = markOnly ? './logo-mark.svg' : variant === 'dark' ? './logo-dark.svg' : './logo-light.svg';
+  const src = markOnly ? '/logo-mark.svg' : variant === 'dark' ? '/logo-dark.svg' : '/logo-light.svg';
   const label = markOnly ? 'Aivanta mark' : 'Aivanta home';
 
   return (
