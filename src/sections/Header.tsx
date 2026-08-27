@@ -6,8 +6,8 @@ import { Logo } from '../components/Logo';
 const navItems = [
   ['Services', '#services'],
   ['Approach', '#approach'],
+  ['Proof', '#proof'],
   ['Industries', '#industries'],
-  ['About', '#about'],
 ] as const;
 
 export function Header() {
