@@ -1,5 +1,6 @@
 import { Chatbot } from './components/Chatbot';
 import { Approach } from './sections/Approach';
+import { Assessment } from './sections/Assessment';
 import { Contact } from './sections/Contact';
 import { Footer } from './sections/Footer';
 import { Header } from './sections/Header';
@@ -19,6 +20,7 @@ export default function App() {
         <Hero />
         <Opportunity />
         <TransformationDemo />
+        <Assessment />
         <Services />
         <Approach />
         <Transformation />
