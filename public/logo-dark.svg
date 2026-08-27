@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 160" role="img" aria-labelledby="title desc">
+  <title id="title">Aivanta</title>
+  <desc id="desc">Aivanta logo with blue and cyan A mark and navy wordmark.</desc>
+  <defs>
+    <linearGradient id="mark-a" x1="80" x2="224" y1="132" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset=".55" stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+    <linearGradient id="mark-b" x1="135" x2="256" y1="28" y2="135" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1F44"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <path d="M74 126 123 26c6-13 25-13 32 0l52 98-34 10-14-29h-50l-13 30zM120 82h29l-15-32z" fill="url(#mark-b)"/>
+  <path d="M62 118c38-19 76-45 107-78 16-18 34-28 53-30-4 23-19 45-43 66-29 26-66 47-111 65z" fill="none" stroke="url(#mark-a)" stroke-linecap="round" stroke-width="12"/>
+  <path d="M58 134c25-5 52-16 82-32" fill="none" stroke="#06B6D4" stroke-linecap="round" stroke-width="8"/>
+  <path d="m214 22 5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="#2563EB"/>
+  <g fill="#0A1F44">
+    <path d="M272 105 309 50h17l37 55h-18l-7-11h-42l-7 11zm31-24h28l-14-22z"/>
+    <path d="M378 50h16v55h-16z"/>
+    <path d="m407 50 26 55h17l26-55h-18l-16 37-17-37z"/>
+    <path d="M484 105 521 50h17l37 55h-18l-7-11h-42l-7 11zm31-24h28l-14-22z"/>
+    <path d="M590 105V50h15l37 34V50h16v55h-14l-38-35v35z"/>
+  </g>
+</svg>

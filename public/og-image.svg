@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#06152F"/>
+      <stop offset="1" stop-color="#0A1F44"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".22" cy=".38" r=".45">
+      <stop stop-color="#06B6D4" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#06B6D4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <image href="./logo-light.svg" x="88" y="88" width="360" height="90"/>
+  <text x="92" y="300" fill="#FFFFFF" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="74" font-weight="800">Turn software into</text>
+  <text x="92" y="388" fill="#FFFFFF" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="74" font-weight="800">intelligent software.</text>
+  <text x="96" y="470" fill="#E0F2FE" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30">AI integration for applications, data, documents, and workflows.</text>
+</svg>

@@ -43,12 +43,19 @@ Vite supports GitHub Pages deployment through a GitHub Actions workflow, and Git
 ```text
 .
 ├── docs/
-│   ├── brand/
-│   │   └── logo-prompt.md
-│   └── website-plan.md
+├── public/
+├── server/
+│   ├── adapters/
+│   ├── domain/
+│   └── migrations/
+├── src/
+│   ├── api/
+│   ├── components/
+│   ├── data/
+│   └── sections/
 └── README.md
 ```
 
 ## Status
 
-Initial brand and website foundation. The next phase is visual direction, page implementation, responsive QA, accessibility, SEO, deployment, and custom-domain setup.
+Initial brand, website, contact flow, and backend foundation. The frontend remains static-first, while the backend handles lead intake, persistence, and notification when deployed.
