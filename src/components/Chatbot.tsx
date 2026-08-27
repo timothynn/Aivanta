@@ -1,12 +1,19 @@
 import { FormEvent, useRef, useState } from 'react';
-import { Bot, MessageCircle, Send, X } from 'lucide-react';
+import { Bot, MessageCircle, Send, Sparkles, X } from 'lucide-react';
 import { sendChatMessage, type ChatMessage } from '../api/client';
 
 const initialMessages: ChatMessage[] = [
   {
     role: 'assistant',
-    content: 'Hi, I am the Aivanta assistant. Ask me about services, AI integration, or how to start an assessment.',
+    content: 'Hi, I’m the Aivanta assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.',
   },
+];
+
+const quickPrompts = [
+  'How can AI improve my existing application?',
+  'What does an AI transformation project look like?',
+  'Can you help me identify an AI use case?',
+  'What is an AI transformation assessment?',
 ];
 
 export function Chatbot() {
@@ -22,15 +29,11 @@ export function Chatbot() {
     window.setTimeout(() => inputRef.current?.focus(), 0);
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const content = draft.trim();
+  async function sendMessage(content: string) {
+    const trimmed = content.trim();
+    if (!trimmed || sending) return;
 
-    if (!content || sending) {
-      return;
-    }
-
-    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content }];
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
     setMessages(nextMessages);
     setDraft('');
     setSending(true);
@@ -47,6 +50,11 @@ export function Chatbot() {
     }
   }
 
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await sendMessage(draft);
+  }
+
   return (
     <div className="chatbot">
       {open ? (
@@ -58,7 +66,7 @@ export function Chatbot() {
               </span>
               <div>
                 <h2>Aivanta Assistant</h2>
-                <p>Online support</p>
+                <p>AI transformation guide</p>
               </div>
             </div>
             <button aria-label="Close chat" className="chat-icon-button" onClick={() => setOpen(false)} type="button">
@@ -72,8 +80,26 @@ export function Chatbot() {
                 {message.content}
               </div>
             ))}
-            {sending ? <div className="chat-message chat-message--assistant">Thinking...</div> : null}
+            {sending ? (
+              <div className="chat-message chat-message--assistant chat-thinking">
+                <Sparkles aria-hidden="true" size={14} /> Thinking through the use case…
+              </div>
+            ) : null}
           </div>
+
+          {messages.length === 1 && !sending ? (
+            <div className="chat-quick-actions" aria-label="Suggested questions">
+              {quickPrompts.map((prompt) => (
+                <button className="chat-quick-action" key={prompt} onClick={() => sendMessage(prompt)} type="button">
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          {messages.length > 2 && !sending ? (
+            <p className="chat-followup">Want to turn this into a concrete project idea? Tell me what application or workflow you want to improve.</p>
+          ) : null}
 
           {error ? (
             <p className="chat-error" role="alert">
@@ -89,7 +115,7 @@ export function Chatbot() {
               autoComplete="off"
               id="chat-message"
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Ask about AI integration..."
+              placeholder="Tell me about your application…"
               ref={inputRef}
               value={draft}
             />
