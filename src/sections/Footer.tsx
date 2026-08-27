@@ -3,6 +3,7 @@ import { Logo } from '../components/Logo';
 const footerGroups = [
   ['Services', ['AI Application Assessment', 'AI Integration', 'Agentic Workflows', 'Document Intelligence', 'AI Modernization']],
   ['Approach', ['How We Work', 'AI Strategy', 'Technology', 'Responsible AI']],
+  ['Proof', ['Demo Work', 'Measurement', 'Integration', 'Responsible AI']],
   ['Industries', ['Aviation', 'Professional Services', 'Financial Services', 'Logistics', 'Enterprise Software']],
 ] as const;
 
@@ -26,7 +27,7 @@ export function Footer() {
           <div key={title}>
             <h4>{title}</h4>
             {links.map((label) => (
-              <a href={title === 'Industries' ? '#industries' : title === 'Approach' ? '#approach' : '#services'} key={label}>
+              <a href={title === 'Industries' ? '#industries' : title === 'Proof' ? '#proof' : title === 'Approach' ? '#approach' : '#services'} key={label}>
                 {label}
               </a>
             ))}
