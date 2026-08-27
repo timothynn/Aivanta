@@ -19,7 +19,7 @@ export function Hero() {
             rely on.
           </p>
           <div className="hero-actions">
-            <a className="button button--primary" href="#contact">
+            <a className="button button--primary" href="#demo">
               Explore AI transformation <Icon name="arrow" size={18} />
             </a>
             <a className="button button--ghost" href="#approach">
