@@ -23,6 +23,11 @@ type AssessmentContext = {
   priority: string;
 };
 
+type ChatContext = {
+  conversation: string;
+  createdAt: string;
+};
+
 function loadAssessmentContext(): AssessmentContext | null {
   try {
     const raw = sessionStorage.getItem('aivanta-assessment');
@@ -32,18 +37,43 @@ function loadAssessmentContext(): AssessmentContext | null {
   }
 }
 
+function loadChatContext(): ChatContext | null {
+  try {
+    const raw = sessionStorage.getItem('aivanta-chat-context');
+    return raw ? (JSON.parse(raw) as ChatContext) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function Contact() {
   const [form, setForm] = useState<LeadPayload>(() => {
     const assessment = typeof window !== 'undefined' ? loadAssessmentContext() : null;
-    if (!assessment) return initialForm;
-    return {
-      ...initialForm,
-      goals: ['Assessment'],
-      source: 'homepage_assessment',
-      message: `Assessment context:\nSystem: ${assessment.system}\nPrimary goal: ${assessment.goal}\nAvailable information: ${assessment.data}\nPreferred next step: ${assessment.priority}\n\nWhat I would like Aivanta to improve: `,
-    };
+    const chat = typeof window !== 'undefined' ? loadChatContext() : null;
+
+    if (assessment) {
+      return {
+        ...initialForm,
+        goals: ['Assessment'],
+        source: 'homepage_assessment',
+        message: `Assessment context:\nSystem: ${assessment.system}\nPrimary goal: ${assessment.goal}\nAvailable information: ${assessment.data}\nPreferred next step: ${assessment.priority}\n\nWhat I would like Aivanta to improve: `,
+      };
+    }
+
+    if (chat) {
+      return {
+        ...initialForm,
+        goals: ['Assessment'],
+        source: 'homepage_chat_discovery',
+        message: `Aivanta Assistant discovery conversation:\n\n${chat.conversation}\n\n\nWhat I would like Aivanta to help with: `,
+      };
+    }
+
+    return initialForm;
   });
+
   const [assessmentContext] = useState<AssessmentContext | null>(() => (typeof window !== 'undefined' ? loadAssessmentContext() : null));
+  const [chatContext] = useState<ChatContext | null>(() => (typeof window !== 'undefined' ? loadChatContext() : null));
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -66,6 +96,7 @@ export function Contact() {
     try {
       await submitLead(form);
       sessionStorage.removeItem('aivanta-assessment');
+      sessionStorage.removeItem('aivanta-chat-context');
       setForm(initialForm);
       setSubmissionState('success');
     } catch (error) {
@@ -89,6 +120,12 @@ export function Contact() {
               <div><small>Your assessment</small><strong>{assessmentContext.system}</strong></div>
               <div><small>Goal</small><strong>{assessmentContext.goal}</strong></div>
               <div><small>Next step</small><strong>{assessmentContext.priority}</strong></div>
+            </div>
+          ) : null}
+          {chatContext ? (
+            <div className="chat-context-note" aria-label="Assistant discovery summary">
+              <Icon name="bot" size={18} />
+              <div><small>Assistant discovery</small><strong>Your conversation is attached to this enquiry.</strong></div>
             </div>
           ) : null}
           <div className="contact-note">
