@@ -2,10 +2,11 @@ import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import { ZodError } from 'zod';
 import type { AppConfig } from './config.js';
-import { createSupportChat, type ChatAssistant } from './domain/chat.js';
+import { createSupportChat, chatRequestSchema, type ChatAssistant } from './domain/chat.js';
 import { createAnalytics, type AnalyticsStore } from './domain/analytics.js';
 import { createLeadIntake, leadStatusSchema, type LeadNotifier, type LeadStore } from './domain/lead.js';
 import { createRateLimit } from './rateLimit.js';
+import { generateOpportunityBrief } from './opportunityBrief.js';
 
 type AppDependencies = {
   config: AppConfig;
@@ -31,8 +32,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
       return reply.code(204).send();
     } catch (error) {
       if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Invalid event.' });
-      request.log.error(error);
-      return reply.code(500).send({ ok: false, message: 'Unable to record the event.' });
+      request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to record the event.' });
     }
   });
 
@@ -43,6 +43,17 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
     } catch (error) {
       if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please enter a message and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) });
       request.log.error(error); return reply.code(502).send({ ok: false, message: 'The assistant is unavailable right now. Please use the contact form and Aivanta will follow up.' });
+    }
+  });
+
+  app.post('/api/opportunity-brief', { preHandler: createRateLimit(10, 60_000) }, async (request, reply) => {
+    try {
+      const input = chatRequestSchema.parse(request.body);
+      const brief = await generateOpportunityBrief(config, input.messages);
+      return reply.send({ ok: true, brief });
+    } catch (error) {
+      if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please provide a valid discovery conversation.' });
+      request.log.error(error); return reply.code(502).send({ ok: false, message: 'Unable to prepare the opportunity brief right now.' });
     }
   });
 
@@ -60,6 +71,12 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
     if (!isAdmin(request.headers.authorization, config.adminToken)) return reply.code(401).send({ ok: false, message: 'Unauthorized' });
     const leads = await leadStore.listLeads();
     return reply.send({ ok: true, leads });
+  });
+
+  app.get('/api/admin/analytics', async (request, reply) => {
+    if (!isAdmin(request.headers.authorization, config.adminToken)) return reply.code(401).send({ ok: false, message: 'Unauthorized' });
+    if (!analyticsStore) return reply.send({ ok: true, summary: null });
+    return reply.send({ ok: true, summary: await analyticsStore.getSummary() });
   });
 
   app.patch('/api/admin/leads/:id', async (request, reply) => {
