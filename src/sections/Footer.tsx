@@ -35,6 +35,7 @@ export function Footer() {
           <a href="#contact">Contact</a>
           <a href="#privacy">Privacy</a>
           <a href="#ai-use">AI use</a>
+          <a href="/status">Service status</a>
         </div>
       </div>
       <div className="container footer-bottom">
@@ -42,6 +43,7 @@ export function Footer() {
         <div>
           <a href="#privacy">Privacy</a>
           <a href="#ai-use">AI use</a>
+          <a href="/404">404</a>
         </div>
       </div>
     </footer>
