@@ -9,7 +9,7 @@ import { createRateLimit } from './rateLimit.js';
 type AppDependencies = { config: AppConfig; chatAssistant: ChatAssistant; leadStore: LeadStore; leadNotifier: LeadNotifier };
 
 export async function createApp({ config, chatAssistant, leadStore, leadNotifier }: AppDependencies) {
-  const app = Fastify({ logger: process.env.NODE_ENV !== 'test' });
+  const app = Fastify({ logger: process.env.NODE_ENV !== 'test', bodyLimit: 100_000 });
   const sendChatMessage = createSupportChat(chatAssistant);
   const submitLead = createLeadIntake(leadStore, leadNotifier);
 
@@ -17,24 +17,18 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   app.get('/api/health', async () => ({ ok: true }));
 
   app.post('/api/chat', { preHandler: createRateLimit(30, 60_000) }, async (request, reply) => {
-    try {
-      const result = await sendChatMessage(request.body);
-      return reply.send({ ok: true, message: result.message });
-    } catch (error) {
+    try { const result = await sendChatMessage(request.body); return reply.send({ ok: true, message: result.message }); }
+    catch (error) {
       if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please enter a message and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) });
-      request.log.error(error);
-      return reply.code(502).send({ ok: false, message: 'The assistant is unavailable right now. Please use the contact form and Aivanta will follow up.' });
+      request.log.error(error); return reply.code(502).send({ ok: false, message: 'The assistant is unavailable right now. Please use the contact form and Aivanta will follow up.' });
     }
   });
 
   app.post('/api/leads', { preHandler: createRateLimit(12, 60_000) }, async (request, reply) => {
-    try {
-      const result = await submitLead(request.body);
-      return reply.code(201).send({ ok: true, leadId: result.leadId });
-    } catch (error) {
+    try { const result = await submitLead(request.body); return reply.code(201).send({ ok: true, leadId: result.leadId }); }
+    catch (error) {
       if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please check the form and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) });
-      request.log.error(error);
-      return reply.code(500).send({ ok: false, message: 'Unable to submit the request right now.' });
+      request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to submit the request right now.' });
     }
   });
 
@@ -49,13 +43,13 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
     try {
       const body = request.body as { status?: unknown };
       const status = leadStatusSchema.parse(body.status);
-      const lead = await leadStore.updateLeadStatus(request.params && typeof request.params === 'object' && 'id' in request.params ? String((request.params as { id: unknown }).id) : '', status);
+      const params = request.params as { id: string };
+      const lead = await leadStore.updateLeadStatus(params.id, status);
       if (!lead) return reply.code(404).send({ ok: false, message: 'Lead not found' });
       return reply.send({ ok: true, lead });
     } catch (error) {
       if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Invalid lead status.' });
-      request.log.error(error);
-      return reply.code(500).send({ ok: false, message: 'Unable to update the lead.' });
+      request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to update the lead.' });
     }
   });
 
@@ -63,6 +57,5 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
 }
 
 function isAdmin(authorization: string | undefined, expectedToken: string | undefined): boolean {
-  if (!expectedToken) return false;
-  return authorization === `Bearer ${expectedToken}`;
+  return Boolean(expectedToken && authorization === `Bearer ${expectedToken}`);
 }
