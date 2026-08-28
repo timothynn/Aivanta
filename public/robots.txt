@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aivanta-beryl.vercel.app/sitemap.xml
