@@ -19,6 +19,9 @@ export type AdminLead = {
   goals: string[];
   source: string;
   opportunityBrief?: OpportunityBrief;
+  qualificationScore: number;
+  qualificationLabel: 'early' | 'promising' | 'high-intent';
+  qualificationReasons: string[];
   status: 'new' | 'contacted' | 'qualified' | 'closed';
   createdAt: string;
   updatedAt: string;
