@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { CrmAdapter } from './crm.js';
 
 const opportunityBriefSchema = z.object({
   summary: z.string().max(1000),
@@ -49,11 +50,18 @@ export type LeadNotifier = {
 
 export type LeadIntakeResult = { leadId: string };
 
-export function createLeadIntake(store: LeadStore, notifier: LeadNotifier) {
+export function createLeadIntake(store: LeadStore, notifier: LeadNotifier, crm?: CrmAdapter) {
   return async function submitLead(input: unknown): Promise<LeadIntakeResult> {
     const submission = leadSubmissionSchema.parse(input);
     const lead = await store.createLead(submission);
     await notifier.notifyLeadCreated(lead);
+    if (crm) {
+      try {
+        await crm.syncLead(lead);
+      } catch (error) {
+        console.warn('CRM sync failed; lead remains stored locally.', { leadId: lead.id, error });
+      }
+    }
     return { leadId: lead.id };
   };
 }
