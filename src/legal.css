@@ -1,0 +1,35 @@
+.legal-section {
+  padding: 72px 0;
+  background: #f8fbff;
+  border-top: 1px solid #e9eff6;
+}
+
+.legal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.legal-grid article {
+  padding: 24px;
+  border: 1px solid #dfe8f3;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(12, 40, 82, .04);
+}
+
+.legal-grid h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.legal-grid p:not(.eyebrow) {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .legal-grid { grid-template-columns: 1fr; }
+}
