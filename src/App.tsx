@@ -2,10 +2,13 @@ import { Chatbot } from './components/Chatbot';
 import { Approach } from './sections/Approach';
 import { Assessment } from './sections/Assessment';
 import { Contact } from './sections/Contact';
+import { Engagement } from './sections/Engagement';
 import { Footer } from './sections/Footer';
 import { Header } from './sections/Header';
 import { Hero } from './sections/Hero';
 import { Industries } from './sections/Industries';
+import { Integrations } from './sections/Integrations';
+import { Labs } from './sections/Labs';
 import { Opportunity } from './sections/Opportunity';
 import { Proof } from './sections/Proof';
 import { Services } from './sections/Services';
@@ -22,10 +25,13 @@ export default function App() {
         <Opportunity />
         <TransformationDemo />
         <Assessment />
+        <Labs />
         <Services />
+        <Engagement />
         <Approach />
         <Transformation />
         <Proof />
+        <Integrations />
         <Industries />
         <WhyAivanta />
         <Contact />
