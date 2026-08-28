@@ -1,5 +1,6 @@
 export type AiVendor = 'local' | 'openai' | 'gemini';
 export type RetrievalMode = 'keyword' | 'semantic';
+export type CrmProvider = 'none' | 'hubspot' | 'webhook';
 
 export type AppConfig = {
   apiOrigin: string;
@@ -14,6 +15,10 @@ export type AppConfig = {
   openaiModel: string;
   retrievalMode: RetrievalMode;
   embeddingModel: string;
+  crmProvider: CrmProvider;
+  hubspotAccessToken?: string;
+  crmWebhookUrl?: string;
+  crmWebhookSecret?: string;
   resendApiKey?: string;
   leadNotificationTo?: string;
   leadNotificationFrom: string;
@@ -24,6 +29,7 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const explicitVendor = parseAiVendor(env.AI_VENDOR);
   const aiVendor = explicitVendor ?? (env.GEMINI_API_KEY ? 'gemini' : env.OPENAI_API_KEY || env.AI_API_KEY ? 'openai' : 'local');
   const retrievalMode = env.AI_RETRIEVAL === 'semantic' ? 'semantic' : 'keyword';
+  const crmProvider = env.CRM_PROVIDER === 'hubspot' || env.CRM_PROVIDER === 'webhook' ? env.CRM_PROVIDER : 'none';
   return {
     apiOrigin: env.API_ORIGIN ?? 'http://localhost:5173',
     databaseUrl: env.DATABASE_URL,
@@ -37,6 +43,10 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     openaiModel: env.OPENAI_MODEL ?? env.AI_MODEL ?? 'gpt-5',
     retrievalMode,
     embeddingModel: env.AI_EMBEDDING_MODEL ?? 'text-embedding-3-small',
+    crmProvider,
+    hubspotAccessToken: env.HUBSPOT_ACCESS_TOKEN,
+    crmWebhookUrl: env.CRM_WEBHOOK_URL,
+    crmWebhookSecret: env.CRM_WEBHOOK_SECRET,
     resendApiKey: env.RESEND_API_KEY,
     leadNotificationTo: env.LEAD_NOTIFICATION_TO,
     leadNotificationFrom: env.LEAD_NOTIFICATION_FROM ?? 'Aivanta <hello@aivanta.ai>',
