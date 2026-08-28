@@ -6,7 +6,7 @@ const baseInstructions = [
   'You are Aivanta Assistant, the AI transformation discovery guide for Aivanta.',
   'Help visitors identify practical AI opportunities in the software, data, documents, and workflows their business already uses.',
   'Be concise, practical, professional, and human. Avoid AI hype and unsupported claims.',
-  'Treat the supplied Aivanta knowledge context as trusted company context. Do not invent services, customers, case studies, prices, testimonials, integrations, or outcomes.',
+  'Treat supplied Aivanta knowledge context as trusted company context. Do not invent services, customers, case studies, prices, testimonials, integrations, or outcomes.',
   'Guide the conversation toward a lightweight discovery brief by learning the existing application, workflow or user group, pain point or desired outcome, and useful information sources.',
   'Ask one useful discovery question at a time. Do not interrogate the visitor with a long checklist.',
   'When enough context is available, summarize the opportunity in plain language and suggest a practical starting point such as an assessment, focused pilot, document intelligence capability, assistant, or bounded workflow agent.',
@@ -14,9 +14,9 @@ const baseInstructions = [
   'Do not request confidential client data, credentials, trade secrets, regulated personal data, or sensitive production records.',
 ].join(' ');
 
-function buildInstructions(messages: ChatMessage[]): string {
+async function buildInstructions(messages: ChatMessage[], config: AppConfig): Promise<string> {
   const latest = messages.at(-1)?.content ?? '';
-  const entries = retrieveKnowledge(latest);
+  const entries = await retrieveKnowledge(latest, config);
   if (!entries.length) return baseInstructions;
   const context = entries.map((entry) => `### ${entry.title}\n${entry.content}`).join('\n\n');
   return `${baseInstructions}\n\nTrusted Aivanta knowledge context for this turn:\n${context}`;
@@ -42,7 +42,7 @@ export class OpenAISupportChatAssistant implements ChatAssistant {
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: { authorization: `Bearer ${this.config.openaiApiKey ?? this.config.aiApiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ model: this.config.openaiModel || this.config.aiModel || 'gpt-5', instructions: buildInstructions(messages), input: messages.map((message) => ({ role: message.role, content: message.content })) }),
+      body: JSON.stringify({ model: this.config.openaiModel || this.config.aiModel || 'gpt-5', instructions: await buildInstructions(messages, this.config), input: messages.map((message) => ({ role: message.role, content: message.content })) }),
     });
     const body = (await response.json().catch(() => null)) as unknown;
     if (!response.ok) throw new Error(`OpenAI response failed with ${response.status}`);
@@ -58,7 +58,7 @@ export class GeminiSupportChatAssistant implements ChatAssistant {
     const model = this.config.geminiModel || this.config.aiModel || 'gemini-2.0-flash';
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST', headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
-      body: JSON.stringify({ system_instruction: { parts: [{ text: buildInstructions(messages) }] }, contents: messages.map((message) => ({ role: message.role === 'assistant' ? 'model' : 'user', parts: [{ text: message.content }] })) }),
+      body: JSON.stringify({ system_instruction: { parts: [{ text: await buildInstructions(messages, this.config) }] }, contents: messages.map((message) => ({ role: message.role === 'assistant' ? 'model' : 'user', parts: [{ text: message.content }] })) }),
     });
     const body = (await response.json().catch(() => null)) as unknown;
     if (!response.ok) throw new Error(`Gemini response failed with ${response.status}`);
