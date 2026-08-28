@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { qualifyLead } from '../domain/qualification.js';
 import type { LeadRecord, LeadStatus, LeadStore, LeadSubmission } from '../domain/lead.js';
 
 export class InMemoryLeadStore implements LeadStore {
@@ -6,13 +7,14 @@ export class InMemoryLeadStore implements LeadStore {
 
   async createLead(submission: LeadSubmission): Promise<LeadRecord> {
     const now = new Date();
-    const lead: LeadRecord = { ...submission, id: randomUUID(), status: 'new', createdAt: now, updatedAt: now };
+    const qualification = qualifyLead(submission);
+    const lead: LeadRecord = { ...submission, id: randomUUID(), status: 'new', qualificationScore: qualification.score, qualificationLabel: qualification.label, qualificationReasons: qualification.reasons, createdAt: now, updatedAt: now };
     this.leads.push(lead);
     return lead;
   }
 
   async listLeads(): Promise<LeadRecord[]> {
-    return [...this.leads].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...this.leads].sort((a, b) => b.qualificationScore - a.qualificationScore || b.createdAt.getTime() - a.createdAt.getTime());
   }
 
   async updateLeadStatus(id: string, status: LeadStatus): Promise<LeadRecord | null> {
