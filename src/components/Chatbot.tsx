@@ -1,32 +1,9 @@
 import { FormEvent, useRef, useState } from 'react';
-import { Bot, FileText, MessageCircle, Send, Sparkles, X } from 'lucide-react';
-import { sendChatMessage, type ChatMessage } from '../api/client';
+import { Bot, MessageCircle, Send, Sparkles, X } from 'lucide-react';
+import { sendChatMessage, trackEvent, type ChatMessage } from '../api/client';
 
-const initialMessages: ChatMessage[] = [
-  {
-    role: 'assistant',
-    content: 'Hi, I’m the Aivanta assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.',
-  },
-];
-
-const quickPrompts = [
-  'How can AI improve my existing application?',
-  'What does an AI transformation project look like?',
-  'Can you help me identify an AI use case?',
-  'What is an AI transformation assessment?',
-];
-
-function buildConsultationContext(messages: ChatMessage[]) {
-  const conversation = messages
-    .slice(1)
-    .map((message) => `${message.role === 'user' ? 'Visitor' : 'Aivanta Assistant'}: ${message.content}`)
-    .join('\n');
-
-  return {
-    conversation,
-    createdAt: new Date().toISOString(),
-  };
-}
+const initialMessages: ChatMessage[] = [{ role: 'assistant', content: 'Hi, I’m the Aivanta assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.' }];
+const quickPrompts = ['How can AI improve my existing application?', 'What does an AI transformation project look like?', 'Can you help me identify an AI use case?', 'What is an AI transformation assessment?'];
 
 export function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -38,26 +15,19 @@ export function Chatbot() {
 
   function openChat() {
     setOpen(true);
+    void trackEvent('assistant_opened');
     window.setTimeout(() => inputRef.current?.focus(), 0);
-  }
-
-  function prepareConsultationBrief() {
-    if (messages.length < 3) return;
-
-    sessionStorage.setItem('aivanta-chat-context', JSON.stringify(buildConsultationContext(messages)));
-    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setOpen(false);
   }
 
   async function sendMessage(content: string) {
     const trimmed = content.trim();
     if (!trimmed || sending) return;
-
     const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
     setMessages(nextMessages);
     setDraft('');
     setSending(true);
     setError('');
+    void trackEvent('assistant_message_sent', { turn: String(nextMessages.filter((m) => m.role === 'user').length) });
 
     try {
       const response = await sendChatMessage(nextMessages.slice(-12));
@@ -70,6 +40,12 @@ export function Chatbot() {
     }
   }
 
+  function prepareBrief() {
+    sessionStorage.setItem('aivanta-chat-discovery', JSON.stringify(messages));
+    void trackEvent('assistant_brief_prepared', { messages: String(messages.length) });
+    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await sendMessage(draft);
@@ -80,41 +56,17 @@ export function Chatbot() {
       {open ? (
         <section aria-label="Aivanta assistant chat" className="chat-window">
           <header className="chat-header">
-            <div className="chat-title">
-              <span className="chat-avatar"><Bot aria-hidden="true" size={19} /></span>
-              <div><h2>Aivanta Assistant</h2><p>AI transformation guide</p></div>
-            </div>
-            <button aria-label="Close chat" className="chat-icon-button" onClick={() => setOpen(false)} type="button">
-              <X aria-hidden="true" size={18} />
-            </button>
+            <div className="chat-title"><span className="chat-avatar"><Bot aria-hidden="true" size={19} /></span><div><h2>Aivanta Assistant</h2><p>AI transformation guide</p></div></div>
+            <button aria-label="Close chat" className="chat-icon-button" onClick={() => setOpen(false)} type="button"><X aria-hidden="true" size={18} /></button>
           </header>
 
           <div aria-live="polite" className="chat-messages">
-            {messages.map((message, index) => (
-              <div className={`chat-message chat-message--${message.role}`} key={`${message.role}-${index}`}>
-                {message.content}
-              </div>
-            ))}
+            {messages.map((message, index) => <div className={`chat-message chat-message--${message.role}`} key={`${message.role}-${index}`}>{message.content}</div>)}
             {sending ? <div className="chat-message chat-message--assistant chat-thinking"><Sparkles aria-hidden="true" size={14} /> Thinking through the use case…</div> : null}
           </div>
 
-          {messages.length === 1 && !sending ? (
-            <div className="chat-quick-actions" aria-label="Suggested questions">
-              {quickPrompts.map((prompt) => (
-                <button className="chat-quick-action" key={prompt} onClick={() => sendMessage(prompt)} type="button">{prompt}</button>
-              ))}
-            </div>
-          ) : null}
-
-          {messages.length > 2 && !sending ? (
-            <div className="chat-followup">
-              <p>We can turn this conversation into a lightweight project brief for your enquiry.</p>
-              <button className="chat-brief-button" onClick={prepareConsultationBrief} type="button">
-                <FileText aria-hidden="true" size={14} /> Prepare consultation brief
-              </button>
-            </div>
-          ) : null}
-
+          {messages.length === 1 && !sending ? <div className="chat-quick-actions" aria-label="Suggested questions">{quickPrompts.map((prompt) => <button className="chat-quick-action" key={prompt} onClick={() => sendMessage(prompt)} type="button">{prompt}</button>)}</div> : null}
+          {messages.length > 4 && !sending ? <div className="chat-discovery-action"><p>Have enough context to explore this as a real project?</p><button className="button button--primary" onClick={prepareBrief} type="button">Prepare consultation brief <Send size={15} /></button></div> : null}
           {error ? <p className="chat-error" role="alert">{error}</p> : null}
 
           <form className="chat-form" onSubmit={handleSubmit}>
@@ -124,10 +76,7 @@ export function Chatbot() {
           </form>
         </section>
       ) : null}
-
-      <button aria-label="Open Aivanta assistant chat" className="chat-pill" onClick={openChat} type="button">
-        <MessageCircle aria-hidden="true" size={19} /><span>Ask Aivanta</span>
-      </button>
+      <button aria-label="Open Aivanta assistant chat" className="chat-pill" onClick={openChat} type="button"><MessageCircle aria-hidden="true" size={19} /><span>Ask Aivanta</span></button>
     </div>
   );
 }
