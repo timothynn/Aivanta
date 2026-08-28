@@ -28,7 +28,7 @@ export const aivantaKnowledge: KnowledgeEntry[] = [
   {
     title: 'Document and knowledge intelligence',
     keywords: ['documents', 'rag', 'knowledge', 'search', 'dms'],
-    content: 'Aivanta can turn enterprise documents and knowledge into searchable, context-aware experiences using retrieval, source-aware answers, summarization, comparison, and structured extraction. The long-term architecture can evolve from curated retrieval to embeddings and vector search as a use case requires it.',
+    content: 'Aivanta can turn enterprise documents and knowledge into searchable, context-aware experiences using retrieval, source-aware answers, summarization, comparison, and structured extraction. The architecture can later evolve from curated retrieval to embeddings and vector search as a use case requires it.',
   },
   {
     title: 'Responsible AI',
@@ -38,7 +38,7 @@ export const aivantaKnowledge: KnowledgeEntry[] = [
   {
     title: 'Engagement paths',
     keywords: ['pilot', 'scale', 'engagement', 'project', 'pricing', 'cost'],
-    content: 'Aivanta uses three practical engagement paths: Discover through an AI Transformation Assessment, Prove through a focused AI Pilot, and Scale through broader AI Transformation. Pricing depends on scope, existing architecture, data, integrations, and required controls, so the first step is usually a focused assessment rather than a fixed generic package.',
+    content: 'Aivanta uses three practical engagement paths: Discover through an AI Transformation Assessment, Prove through a focused AI Pilot, and Scale through broader AI Transformation. Pricing depends on scope, existing architecture, data, integrations, and required controls.',
   },
   {
     title: 'Industries',
@@ -48,18 +48,14 @@ export const aivantaKnowledge: KnowledgeEntry[] = [
 ];
 
 export function retrieveKnowledge(query: string, limit = 4): KnowledgeEntry[] {
-  const terms = normalize(query).split(/\\s+/).filter(Boolean);
+  const terms = normalize(query).split(/\s+/).filter(Boolean);
   const scored = aivantaKnowledge.map((entry) => {
     const haystack = normalize(`${entry.title} ${entry.keywords.join(' ')} ${entry.content}`);
     const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
     return { entry, score };
   });
 
-  return scored
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
-    .map((item) => item.entry);
+  return scored.filter((item) => item.score > 0).sort((a, b) => b.score - a.score).slice(0, limit).map((item) => item.entry);
 }
 
 function normalize(value: string): string {
