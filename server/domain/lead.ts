@@ -30,6 +30,9 @@ export type LeadSubmission = z.infer<typeof leadSubmissionSchema>;
 export type LeadRecord = LeadSubmission & {
   id: string;
   status: LeadStatus;
+  qualificationScore: number;
+  qualificationLabel: 'early' | 'promising' | 'high-intent';
+  qualificationReasons: string[];
   createdAt: Date;
   updatedAt: Date;
 };
