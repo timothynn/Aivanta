@@ -15,12 +15,8 @@ export function Footer() {
           <Logo className="brand--footer" />
           <p>AI software consultancy helping businesses turn existing software into intelligent applications.</p>
           <div className="socials">
-            <a href="https://github.com/timothynn/Aivanta" rel="noreferrer" target="_blank">
-              GitHub
-            </a>
-            <a href="https://www.linkedin.com/" rel="noreferrer" target="_blank">
-              LinkedIn
-            </a>
+            <a href="https://github.com/timothynn/Aivanta" rel="noreferrer" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/" rel="noreferrer" target="_blank">LinkedIn</a>
           </div>
         </div>
         {footerGroups.map(([title, links]) => (
@@ -37,13 +33,15 @@ export function Footer() {
           <h4>Company</h4>
           <a href="#about">About Aivanta</a>
           <a href="#contact">Contact</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#ai-use">AI use</a>
         </div>
       </div>
       <div className="container footer-bottom">
         <span>© 2026 Aivanta. All rights reserved.</span>
         <div>
-          <a href="mailto:hello@aivanta.ai?subject=Privacy%20Policy%20Request">Privacy Policy</a>
-          <a href="mailto:hello@aivanta.ai?subject=Terms%20of%20Service%20Request">Terms of Service</a>
+          <a href="#privacy">Privacy</a>
+          <a href="#ai-use">AI use</a>
         </div>
       </div>
     </footer>
