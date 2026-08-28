@@ -34,7 +34,8 @@ export function Contact() {
     event.preventDefault(); setSubmissionState('submitting'); setErrorMessage('');
     void trackEvent('contact_form_started', { source: form.source });
     try {
-      await submitLead(form);
+      const payload = chatContext?.brief ? { ...form, opportunityBrief: chatContext.brief } : form;
+      await submitLead(payload);
       sessionStorage.removeItem('aivanta-assessment'); sessionStorage.removeItem('aivanta-chat-context'); sessionStorage.removeItem('aivanta-opportunity-brief');
       void trackEvent('lead_submitted', { source: form.source, industry: form.industry || 'unspecified' });
       setForm(initialForm); setSubmissionState('success');
