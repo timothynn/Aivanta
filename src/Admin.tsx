@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { BarChart3, RefreshCw, ShieldCheck } from 'lucide-react';
+import { BarChart3, RefreshCw, ShieldCheck, TrendingUp } from 'lucide-react';
 import { getAdminAnalytics, listAdminLeads, updateAdminLeadStatus, type AdminAnalytics, type AdminLead } from './api/adminClient';
 import './admin.css';
 
@@ -11,6 +11,7 @@ export default function Admin() {
   const [leads, setLeads] = useState<AdminLead[]>([]);
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'all' | AdminLead['qualificationLabel']>('all');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,10 +26,12 @@ export default function Admin() {
     } catch (caught) { setError(caught instanceof Error ? caught.message : 'Unable to load the console.'); }
     finally { setBusy(false); }
   }
-
   useEffect(() => { if (token) void load(); }, []);
-  const selected = useMemo(() => leads.find((lead) => lead.id === selectedId) ?? leads[0] ?? null, [leads, selectedId]);
+
+  const filteredLeads = useMemo(() => filter === 'all' ? leads : leads.filter((lead) => lead.qualificationLabel === filter), [filter, leads]);
+  const selected = useMemo(() => filteredLeads.find((lead) => lead.id === selectedId) ?? filteredLeads[0] ?? null, [filteredLeads, selectedId]);
   const counts = statuses.reduce<Record<string, number>>((acc, status) => { acc[status] = leads.filter((lead) => lead.status === status).length; return acc; }, {});
+  const qualificationCounts = leads.reduce<Record<string, number>>((acc, lead) => { acc[lead.qualificationLabel] = (acc[lead.qualificationLabel] ?? 0) + 1; return acc; }, {});
 
   async function changeStatus(status: AdminLead['status']) {
     if (!selected || !token) return;
@@ -44,12 +47,22 @@ export default function Admin() {
     <main className="admin-shell">
       <div className="admin-topbar"><div><span className="admin-kicker">AIVANTA</span><h1>Lead Console</h1></div><button className="admin-refresh" onClick={() => void load()} type="button"><RefreshCw size={16} /> Refresh</button></div>
       <section className="admin-analytics"><div className="admin-analytics-head"><div><span className="admin-kicker">SIGNALS</span><h2>Website & conversion analytics</h2><p>First-party events recorded by the Aivanta site. Visitor message contents are not stored as analytics metadata.</p></div><BarChart3 size={22} /></div>{analytics ? <><div className="admin-analytics-cards"><div><small>Total events</small><strong>{analytics.totalEvents}</strong></div><div><small>Assistant opens</small><strong>{analytics.funnel.assistantOpened}</strong></div><div><small>Briefs prepared</small><strong>{analytics.funnel.briefsPrepared}</strong></div><div><small>Leads submitted</small><strong>{analytics.funnel.leadsSubmitted}</strong></div></div><div className="admin-funnel">{[['Page views', analytics.funnel.pageViews, analytics.funnel.pageViews],['Assistant opened', analytics.funnel.assistantOpened, analytics.funnel.pageViews],['Assessment started', analytics.funnel.assessmentsStarted, analytics.funnel.pageViews],['Assessment completed', analytics.funnel.assessmentsCompleted, analytics.funnel.assessmentsStarted],['Brief prepared', analytics.funnel.briefsPrepared, analytics.funnel.assistantOpened],['Lead submitted', analytics.funnel.leadsSubmitted, analytics.funnel.pageViews]].map(([label, value, base]) => <div key={label as string}><span>{label}</span><strong>{value}</strong><small>{percent(Number(value), Number(base))}</small></div>)}</div><div className="admin-analytics-lower"><div><h3>Top events</h3>{analytics.topEvents.map((event) => <div className="admin-event-row" key={event.name}><span>{event.name}</span><strong>{event.count}</strong></div>)}</div><div><h3>Recent activity</h3>{analytics.recentEvents.map((event, index) => <div className="admin-event-row" key={`${event.name}-${event.createdAt}-${index}`}><span>{event.name} <small>{event.path}</small></span><strong>{new Date(event.createdAt).toLocaleTimeString()}</strong></div>)}</div></div></> : <p className="admin-empty">Analytics are unavailable until the server has a persistent analytics store.</p>}</section>
+
+      <section className="admin-qualification">
+        <div className="admin-analytics-head"><div><span className="admin-kicker">LEAD QUALITY</span><h2>Qualification signals</h2><p>Explainable scoring is used to prioritize attention; it does not replace human qualification.</p></div><TrendingUp size={22} /></div>
+        <div className="admin-qualification-grid">
+          {(['high-intent', 'promising', 'early'] as const).map((label) => <button key={label} className={`qualification-card qualification-card--${label} ${filter === label ? 'is-selected' : ''}`} onClick={() => setFilter(filter === label ? 'all' : label)} type="button"><span>{label}</span><strong>{qualificationCounts[label] ?? 0}</strong><small>{label === 'high-intent' ? '70–100' : label === 'promising' ? '45–69' : '0–44'} score</small></button>)}
+          <button className={`qualification-card qualification-card--all ${filter === 'all' ? 'is-selected' : ''}`} onClick={() => setFilter('all')} type="button"><span>all leads</span><strong>{leads.length}</strong><small>show everything</small></button>
+        </div>
+      </section>
+
       <div className="admin-stats">{statuses.map((status) => <div key={status}><span>{status}</span><strong>{counts[status] ?? 0}</strong></div>)}</div>
       {error ? <p className="admin-error">{error}</p> : null}
       <div className="admin-grid">
-        <section className="admin-list"><div className="admin-list-head"><strong>Recent leads</strong><span>{leads.length} shown</span></div>{leads.map((lead) => <button className={`admin-lead ${lead.id === selected?.id ? 'is-selected' : ''}`} key={lead.id} onClick={() => setSelectedId(lead.id)} type="button"><div><strong>{lead.company || lead.name}</strong><small>{lead.industry || 'Industry not specified'} · {lead.source}</small></div><span className={`admin-status admin-status--${lead.status}`}>{lead.status}</span></button>)}</section>
+        <section className="admin-list"><div className="admin-list-head"><strong>{filter === 'all' ? 'Recent leads' : `${filter} leads`}</strong><span>{filteredLeads.length} shown</span></div>{filteredLeads.map((lead) => <button className={`admin-lead ${lead.id === selected?.id ? 'is-selected' : ''}`} key={lead.id} onClick={() => setSelectedId(lead.id)} type="button"><div><strong>{lead.company || lead.name}</strong><small>{lead.industry || 'Industry not specified'} · {lead.source}</small></div><div className="admin-lead-right"><strong>{lead.qualificationScore}</strong><span className={`admin-status admin-status--${lead.status}`}>{lead.status}</span></div></button>)}</section>
         <section className="admin-detail">{selected ? <>
           <div className="admin-detail-head"><div><span className="admin-kicker">LEAD</span><h2>{selected.company || selected.name}</h2><p>{selected.name} · <a href={`mailto:${selected.email}`}>{selected.email}</a></p></div><select value={selected.status} onChange={(event) => void changeStatus(event.target.value as AdminLead['status'])} disabled={busy}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></div>
+          <div className="admin-qualification-detail"><div><small>Qualification</small><strong>{selected.qualificationScore}/100</strong><span className={`qualification-label qualification-label--${selected.qualificationLabel}`}>{selected.qualificationLabel}</span></div><div><small>Why</small>{selected.qualificationReasons.map((reason) => <span key={reason}>{reason}</span>)}</div></div>
           <div className="admin-meta"><div><small>Industry</small><strong>{selected.industry || '—'}</strong></div><div><small>Source</small><strong>{selected.source}</strong></div><div><small>Created</small><strong>{new Date(selected.createdAt).toLocaleString()}</strong></div></div>
           <div className="admin-section"><small>Goals</small><div className="admin-tags">{selected.goals.map((goal) => <span key={goal}>{goal}</span>)}</div></div>
           {selected.opportunityBrief ? <div className="admin-section admin-brief"><small>AI Opportunity Brief</small><h3>{selected.opportunityBrief.recommendedStart}</h3><p>{selected.opportunityBrief.summary}</p><div className="admin-meta"><div><small>System</small><strong>{selected.opportunityBrief.system}</strong></div><div><small>Users</small><strong>{selected.opportunityBrief.users}</strong></div><div><small>Data</small><strong>{selected.opportunityBrief.dataSources}</strong></div></div><div className="admin-section"><small>Potential opportunities</small><div className="admin-tags">{selected.opportunityBrief.opportunities.map((item) => <span key={item}>{item}</span>)}</div></div><div className="admin-section"><small>Considerations</small><div className="admin-tags">{selected.opportunityBrief.considerations.map((item) => <span key={item}>{item}</span>)}</div></div></div> : null}
