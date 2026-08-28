@@ -3,6 +3,7 @@ export type AiVendor = 'local' | 'openai' | 'gemini';
 export type AppConfig = {
   apiOrigin: string;
   databaseUrl?: string;
+  adminToken?: string;
   aiVendor: AiVendor;
   aiApiKey?: string;
   aiModel: string;
@@ -19,10 +20,10 @@ export type AppConfig = {
 export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
   const explicitVendor = parseAiVendor(env.AI_VENDOR);
   const aiVendor = explicitVendor ?? (env.GEMINI_API_KEY ? 'gemini' : env.OPENAI_API_KEY || env.AI_API_KEY ? 'openai' : 'local');
-
   return {
     apiOrigin: env.API_ORIGIN ?? 'http://localhost:5173',
     databaseUrl: env.DATABASE_URL,
+    adminToken: env.ADMIN_TOKEN,
     aiVendor,
     aiApiKey: env.AI_API_KEY,
     aiModel: env.AI_MODEL ?? '',
@@ -38,9 +39,6 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
 }
 
 function parseAiVendor(value: string | undefined): AiVendor | undefined {
-  if (value === 'local' || value === 'openai' || value === 'gemini') {
-    return value;
-  }
-
+  if (value === 'local' || value === 'openai' || value === 'gemini') return value;
   return undefined;
 }
