@@ -23,4 +23,8 @@ const app = await createApp({
   crm,
 });
 
-await app.listen({ host: '0.0.0.0', port: config.port });
+export default app;
+
+if (process.env.VERCEL !== '1') {
+  await app.listen({ host: '0.0.0.0', port: config.port });
+}
