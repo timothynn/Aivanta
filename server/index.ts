@@ -7,9 +7,10 @@ import { createCrmAdapter } from './adapters/crmAdapters.js';
 import { createConfiguredSupportChatAssistant } from './adapters/supportChatAssistant.js';
 import { createApp } from './app.js';
 import { readConfig } from './config.js';
+import { createDatabasePool } from './db.js';
 
 const config = readConfig();
-const pool = config.databaseUrl ? new Pool({ connectionString: config.databaseUrl }) : null;
+const pool: Pool | null = createDatabasePool(config);
 const leadStore = pool ? new PostgresLeadStore(pool) : new InMemoryLeadStore();
 const analyticsStore = pool ? new PostgresAnalyticsStore(pool) : new InMemoryAnalyticsStore();
 const crm = createCrmAdapter(config);
