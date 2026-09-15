@@ -3,6 +3,9 @@ import type { AppConfig } from '../config';
 import { createConfiguredSupportChatAssistant, GeminiSupportChatAssistant, LocalSupportChatAssistant } from './supportChatAssistant';
 
 const baseConfig: AppConfig = {
+  retrievalMode: 'keyword',
+  embeddingModel: 'text-embedding-3-small',
+  crmProvider: 'none',
   apiOrigin: 'http://localhost:5173',
   aiVendor: 'gemini',
   aiModel: '',

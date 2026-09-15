@@ -19,11 +19,11 @@ export function Hero() {
             rely on.
           </p>
           <div className="hero-actions">
-            <a className="button button--primary" href="#demo">
-              Explore AI transformation <Icon name="arrow" size={18} />
+            <a className="button button--primary" href="#contact">
+              Discuss your workflow <Icon name="arrow" size={18} />
             </a>
-            <a className="button button--ghost" href="#approach">
-              See how it works <Icon name="arrow" size={17} />
+            <a className="button button--ghost" href="/logistics#shipment-check">
+              Try a logistics example <Icon name="arrow" size={17} />
             </a>
           </div>
         </div>

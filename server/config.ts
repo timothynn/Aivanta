@@ -26,6 +26,11 @@ export type AppConfig = {
 };
 
 export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
+  if (env.NODE_ENV === 'production') {
+    const required = ['DATABASE_URL', 'ADMIN_TOKEN', 'RESEND_API_KEY', 'LEAD_NOTIFICATION_TO', 'LEAD_NOTIFICATION_FROM', 'API_ORIGIN'];
+    const missing = required.filter((key) => !env[key]?.trim());
+    if (missing.length) throw new Error(`Production API configuration missing: ${missing.join(', ')}`);
+  }
   const explicitVendor = parseAiVendor(env.AI_VENDOR);
   const aiVendor = explicitVendor ?? (env.GEMINI_API_KEY ? 'gemini' : env.OPENAI_API_KEY || env.AI_API_KEY ? 'openai' : 'local');
   const retrievalMode = env.AI_RETRIEVAL === 'semantic' ? 'semantic' : 'keyword';

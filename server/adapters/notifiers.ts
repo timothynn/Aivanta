@@ -23,9 +23,11 @@ export class ResendLeadNotifier implements LeadNotifier {
 
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
+      signal: AbortSignal.timeout(10000),
       headers: {
         authorization: `Bearer ${this.config.resendApiKey}`,
         'content-type': 'application/json',
+        'Idempotency-Key': `lead-${lead.id}`,
       },
       body: JSON.stringify({
         from: this.config.leadNotificationFrom,

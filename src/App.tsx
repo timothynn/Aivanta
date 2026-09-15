@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
 import { Chatbot } from './components/Chatbot';
-import { trackEvent } from './api/client';
 import { Approach } from './sections/Approach';
 import { Assessment } from './sections/Assessment';
 import { Contact } from './sections/Contact';
@@ -20,10 +18,6 @@ import { TransformationDemo } from './sections/TransformationDemo';
 import { WhyAivanta } from './sections/WhyAivanta';
 
 export default function App() {
-  useEffect(() => {
-    void trackEvent('page_view');
-  }, []);
-
   return (
     <div id="top">
       <Header />
@@ -31,7 +25,6 @@ export default function App() {
         <Hero />
         <Opportunity />
         <TransformationDemo />
-        <Assessment />
         <Labs />
         <Services />
         <Engagement />
@@ -41,6 +34,7 @@ export default function App() {
         <Integrations />
         <Industries />
         <WhyAivanta />
+        <Assessment />
         <Contact />
         <Legal />
       </main>

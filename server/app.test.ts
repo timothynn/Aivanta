@@ -6,6 +6,9 @@ import type { ChatAssistant } from './domain/chat';
 import type { LeadNotifier } from './domain/lead';
 
 const config: AppConfig = {
+  retrievalMode: 'keyword',
+  embeddingModel: 'text-embedding-3-small',
+  crmProvider: 'none',
   apiOrigin: 'http://localhost:5173',
   aiVendor: 'local',
   aiModel: '',
@@ -34,6 +37,18 @@ function createChatAssistant(): ChatAssistant {
 }
 
 describe('createApp', () => {
+  it('acknowledges retries and returns 409 for a reused identifier with different content', async () => {
+    const app = await createApp({ config, chatAssistant: createChatAssistant(), leadStore: new InMemoryLeadStore(), leadNotifier: { notifyLeadCreated: vi.fn().mockResolvedValue(undefined) } });
+    try {
+      const body = { ...validBody, submissionId: 'bbb7d1db-3e9d-45b3-a6f7-63b9fa2b4961' };
+      const first = await app.inject({ method: 'POST', url: '/api/leads', payload: body });
+      const second = await app.inject({ method: 'POST', url: '/api/leads', payload: body });
+      expect(first.statusCode).toBe(201);
+      expect(second.json()).toEqual(first.json());
+      const conflict = await app.inject({ method: 'POST', url: '/api/leads', payload: { ...body, message: 'Another workflow using the old identifier.' } });
+      expect(conflict.statusCode).toBe(409);
+    } finally { await app.close(); }
+  });
   it('returns health status', async () => {
     const app = await createApp({
       config,
@@ -46,7 +61,7 @@ describe('createApp', () => {
     await app.close();
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ ok: true });
+    expect(response.json()).toEqual({ ok: true, service: 'aivanta-api' });
   });
 
   it('accepts valid lead submissions', async () => {

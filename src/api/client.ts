@@ -10,6 +10,7 @@ export type OpportunityBrief = {
 };
 
 export type LeadPayload = {
+  submissionId?: string;
   name: string;
   email: string;
   company?: string;
@@ -33,7 +34,8 @@ export async function submitLead(payload: LeadPayload): Promise<LeadResponse> {
   const response = await fetch(`${apiBaseUrl}/api/leads`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
   const body = (await response.json().catch(() => null)) as unknown;
   if (!response.ok) { const message = body && typeof body === 'object' && 'message' in body && typeof body.message === 'string' ? body.message : 'Unable to submit the request. Please try again.'; throw new Error(message); }
-  return body as LeadResponse;
+  if (!body || typeof body !== 'object' || !('ok' in body) || body.ok !== true || !('leadId' in body) || typeof body.leadId !== 'string') throw new Error('Unable to confirm your enquiry was saved. Please try again.');
+  return { ok: true, leadId: body.leadId };
 }
 
 export async function sendChatMessage(messages: ChatMessage[]): Promise<ChatResponse> {

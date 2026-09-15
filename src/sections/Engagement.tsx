@@ -15,7 +15,7 @@ export function Engagement() {
         <div className="section-heading engagement-heading">
           <p className="eyebrow">HOW WE ENGAGE</p>
           <h2>Start small. Prove value. Scale what works.</h2>
-          <p>Aivanta engagements are designed to reduce uncertainty before a larger transformation. Scope and pricing are tailored to the application, workflow, and constraints involved.</p>
+          <p>Start with a short, free introductory conversation. A paid assessment has a fixed scope and an agreed fee before work begins. Pilots, support hours, and further improvements are scoped separately.</p>
         </div>
         <div className="engagement-grid">
           {tiers.map((tier, index) => (
@@ -25,7 +25,7 @@ export function Engagement() {
               <h3>{tier.title}</h3>
               <p>{tier.body}</p>
               <div className="engagement-list">{tier.items.map((item) => <div key={item}><CheckCircle2 size={15} />{item}</div>)}</div>
-              <a className="button button--ghost-dark" href={index === 0 ? '#assessment' : '#contact'}>{index === 0 ? 'Start assessment' : 'Discuss this path'} <ArrowRight size={16} /></a>
+              <a className="button button--ghost-dark" href="#contact">Discuss this workflow <ArrowRight size={16} /></a>
             </article>
           ))}
         </div>

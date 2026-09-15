@@ -1,53 +1,71 @@
-import { FormEvent, useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Icon } from '../components/Icon';
-import { submitLead, trackEvent, type LeadPayload, type OpportunityBrief } from '../api/client';
+import { submitLead, trackEvent, type LeadPayload } from '../api/client';
+import { assessmentSchema, chatContextSchema, clearEnquiryContext, contextEvent, readContext } from '../api/enquiryContext';
 
 const goalOptions = ['AI integration', 'Document intelligence', 'Agentic workflows', 'Modernization', 'Assessment'];
 const initialForm: LeadPayload = { name: '', email: '', company: '', industry: '', message: '', goals: [], source: 'homepage_contact_form' };
-type SubmissionState = 'idle' | 'submitting' | 'success' | 'error';
-type AssessmentContext = { system: string; goal: string; data: string; priority: string };
-type ChatContext = { conversation: string; brief?: OpportunityBrief; createdAt: string };
-
-function loadAssessmentContext(): AssessmentContext | null { try { const raw = sessionStorage.getItem('aivanta-assessment'); return raw ? (JSON.parse(raw) as AssessmentContext) : null; } catch { return null; } }
-function loadChatContext(): ChatContext | null { try { const raw = sessionStorage.getItem('aivanta-chat-context'); return raw ? (JSON.parse(raw) as ChatContext) : null; } catch { return null; } }
 
 export function Contact() {
-  const [form, setForm] = useState<LeadPayload>(() => {
-    const assessment = typeof window !== 'undefined' ? loadAssessmentContext() : null;
-    const chat = typeof window !== 'undefined' ? loadChatContext() : null;
-    if (assessment) return { ...initialForm, goals: ['Assessment'], source: 'homepage_assessment', message: `Assessment context:\nSystem: ${assessment.system}\nPrimary goal: ${assessment.goal}\nAvailable information: ${assessment.data}\nPreferred next step: ${assessment.priority}\n\nWhat I would like Aivanta to improve: ` };
-    if (chat) {
-      const briefText = chat.brief ? `\n\nAI Opportunity Brief:\nRecommended start: ${chat.brief.recommendedStart}\nSystem: ${chat.brief.system}\nUsers: ${chat.brief.users}\nPain point: ${chat.brief.painPoint}\nData sources: ${chat.brief.dataSources}\nOpportunities: ${chat.brief.opportunities.join(', ')}\nConsiderations: ${chat.brief.considerations.join(', ')}` : '';
-      return { ...initialForm, goals: ['Assessment'], source: 'homepage_chat_discovery', message: `Aivanta Assistant discovery conversation:\n\n${chat.conversation}${briefText}\n\nWhat I would like Aivanta to help with: ` };
+  const [form, setForm] = useState<LeadPayload>({ ...initialForm, industry: window.location.pathname.startsWith('/logistics') ? 'Logistics' : '' });
+  const [assessment, setAssessment] = useState(() => readContext('aivanta-assessment', assessmentSchema));
+  const [chat, setChat] = useState(() => readContext('aivanta-chat-context', chatContextSchema));
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [error, setError] = useState('');
+  const inFlight = useRef(false);
+  const retry = useRef<{ fingerprint: string; id: string } | null>(null);
+
+  useEffect(() => {
+    function receive(event: Event) {
+      const detail = (event as CustomEvent).detail;
+      if (detail?.clear) { setAssessment(null); setChat(null); return; }
+      const nextAssessment = assessmentSchema.safeParse(detail?.assessment);
+      const nextChat = chatContextSchema.safeParse(detail?.chat);
+      if (nextAssessment.success) setAssessment(nextAssessment.data);
+      if (nextChat.success) setChat(nextChat.data);
     }
-    return initialForm;
-  });
-  const [assessmentContext] = useState<AssessmentContext | null>(() => (typeof window !== 'undefined' ? loadAssessmentContext() : null));
-  const [chatContext] = useState<ChatContext | null>(() => (typeof window !== 'undefined' ? loadChatContext() : null));
-  const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+    window.addEventListener(contextEvent, receive);
+    return () => window.removeEventListener(contextEvent, receive);
+  }, []);
 
-  function updateField(field: keyof LeadPayload, value: string) { setForm((current) => ({ ...current, [field]: value })); }
-  function toggleGoal(goal: string) { setForm((current) => ({ ...current, goals: current.goals.includes(goal) ? current.goals.filter((item) => item !== goal) : [...current.goals, goal] })); }
-
+  function field(key: keyof LeadPayload, value: string) { setForm((current) => ({ ...current, [key]: value })); setStatus('idle'); }
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSubmissionState('submitting'); setErrorMessage('');
-    void trackEvent('contact_form_started', { source: form.source });
+    event.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true; setStatus('submitting'); setError('');
+    const context = [assessment ? `Workflow questionnaire:\nSystem: ${assessment.system}\nGoal: ${assessment.goal}\nData: ${assessment.data}\nNext step: ${assessment.priority}` : '',
+      chat ? `Assistant conversation:\n${chat.conversation.slice(-2000)}` : ''].filter(Boolean).join('\n\n');
+    const payload: LeadPayload = { ...form, message: [form.message, context].filter(Boolean).join('\n\n').slice(0, 5000),
+      source: chat ? 'homepage_chat_discovery' : assessment ? 'homepage_assessment' : window.location.pathname.startsWith('/logistics') ? 'logistics_contact_form' : form.source,
+      ...(chat?.brief ? { opportunityBrief: chat.brief } : {}) };
+    const fingerprint = JSON.stringify(payload);
     try {
-      const payload = chatContext?.brief ? { ...form, opportunityBrief: chatContext.brief } : form;
-      await submitLead(payload);
-      sessionStorage.removeItem('aivanta-assessment'); sessionStorage.removeItem('aivanta-chat-context'); sessionStorage.removeItem('aivanta-opportunity-brief');
-      void trackEvent('lead_submitted', { source: form.source, industry: form.industry || 'unspecified' });
-      setForm(initialForm); setSubmissionState('success');
-    } catch (error) { setSubmissionState('error'); setErrorMessage(error instanceof Error ? error.message : 'Unable to submit the request. Please try again.'); }
+      if (retry.current?.fingerprint !== fingerprint) retry.current = { fingerprint, id: crypto.randomUUID() };
+      await submitLead({ ...payload, submissionId: retry.current.id });
+      clearEnquiryContext(); retry.current = null;
+      void trackEvent('lead_submitted', { source: payload.source, industry: payload.industry || 'unspecified' });
+      setForm({ ...initialForm }); setStatus('success');
+    } catch (caught) { setError(caught instanceof Error ? caught.message : 'Unable to submit. Please try again.'); setStatus('error'); }
+    finally { inFlight.current = false; }
   }
 
-  return (
-    <section id="contact" className="contact-section">
-      <div className="container contact-inner">
-        <div className="contact-copy"><p className="eyebrow">Start Here</p><h2>Your software already works. Let&apos;s make it intelligent.</h2><p>Share the workflow, application, or knowledge problem you want to improve. The first step is a focused assessment, not a platform rewrite.</p>{assessmentContext ? <div className="assessment-context" aria-label="Assessment summary"><div><small>Your assessment</small><strong>{assessmentContext.system}</strong></div><div><small>Goal</small><strong>{assessmentContext.goal}</strong></div><div><small>Next step</small><strong>{assessmentContext.priority}</strong></div></div> : null}{chatContext ? <div className="chat-context-note" aria-label="Assistant discovery summary"><Icon name="bot" size={18} /><div><small>Assistant discovery</small><strong>{chatContext.brief ? `Opportunity brief: ${chatContext.brief.recommendedStart}` : 'Your conversation is attached to this enquiry.'}</strong></div></div> : null}<div className="contact-note"><Icon name="shield" size={19} /><span>No confidential client data is needed for the first conversation.</span></div></div>
-        <form className="lead-form" onSubmit={handleSubmit}><div className="form-grid"><label>Name<input autoComplete="name" name="name" onChange={(event) => updateField('name', event.target.value)} required value={form.name} /></label><label>Work email<input autoComplete="email" name="email" onChange={(event) => updateField('email', event.target.value)} required type="email" value={form.email} /></label><label>Company<input autoComplete="organization" name="company" onChange={(event) => updateField('company', event.target.value)} value={form.company} /></label><label>Industry<select name="industry" onChange={(event) => updateField('industry', event.target.value)} value={form.industry}><option value="">Select one</option><option>Aviation</option><option>Professional Services</option><option>Financial Services</option><option>Logistics</option><option>Enterprise Software</option><option>Other</option></select></label></div><fieldset><legend>What are you exploring?</legend><div className="goal-options">{goalOptions.map((goal) => <label className="goal-option" key={goal}><input checked={form.goals.includes(goal)} onChange={() => toggleGoal(goal)} type="checkbox" /><span>{goal}</span></label>)}</div></fieldset><label>What should AI improve?<textarea name="message" onChange={(event) => updateField('message', event.target.value)} required rows={5} value={form.message} /></label>{submissionState === 'success' ? <p className="form-status form-status--success" role="status">Request received. Aivanta will follow up by email.</p> : null}{submissionState === 'error' ? <p className="form-status form-status--error" role="alert">{errorMessage}</p> : null}<button className="button button--primary button--form" disabled={submissionState === 'submitting'} type="submit">{submissionState === 'submitting' ? 'Sending...' : 'Start a conversation'} <Icon name="arrow" size={18} /></button></form>
-      </div>
-    </section>
-  );
+  return <section id="contact" className="contact-section"><div className="container contact-inner">
+    <div className="contact-copy"><p className="eyebrow">START WITH A CONVERSATION</p><h2>Which workflow takes more effort than it should?</h2><p>Tell us what your team does today and which tools you use. We will start with a short introductory conversation and agree any paid assessment separately.</p>
+      {assessment && <div className="assessment-context" aria-label="Assessment summary"><div><small>System</small><strong>{assessment.system}</strong></div><div><small>Goal</small><strong>{assessment.goal}</strong></div><div><small>Next step</small><strong>{assessment.priority}</strong></div></div>}
+      {chat && <p aria-label="Assistant discovery summary">{chat.brief ? `Opportunity brief: ${chat.brief.recommendedStart}` : 'Your assistant conversation is attached.'}</p>}
+      {(assessment || chat) && <button className="button button--ghost" type="button" onClick={clearEnquiryContext}>Remove attached context</button>}
+      <div className="contact-note"><Icon name="shield" size={19} /><span>No confidential client data is needed for the first conversation.</span></div>
+    </div>
+    <form className="lead-form" onSubmit={handleSubmit}><div className="form-grid">
+      <label>Name<input autoComplete="name" name="name" minLength={2} maxLength={120} required value={form.name} onChange={(e) => field('name', e.target.value)} /></label>
+      <label>Work email<input autoComplete="email" name="email" type="email" maxLength={180} required value={form.email} onChange={(e) => field('email', e.target.value)} /></label>
+      <label>Company<input autoComplete="organization" name="company" maxLength={160} value={form.company} onChange={(e) => field('company', e.target.value)} /></label>
+      <label>Industry<select name="industry" value={form.industry} onChange={(e) => field('industry', e.target.value)}><option value="">Select one</option>{['Logistics', 'Aviation', 'Professional Services', 'Financial Services', 'Enterprise Software', 'Other'].map((industry) => <option key={industry}>{industry}</option>)}</select></label>
+    </div><fieldset><legend>What are you exploring?</legend><div className="goal-options">{goalOptions.map((goal) => <label className="goal-option" key={goal}><input type="checkbox" checked={form.goals.includes(goal)} onChange={() => setForm((current) => ({ ...current, goals: current.goals.includes(goal) ? current.goals.filter((item) => item !== goal) : [...current.goals, goal] }))} /><span>{goal}</span></label>)}</div></fieldset>
+      <label>What should AI improve?<textarea name="message" required minLength={10} maxLength={2000} rows={5} value={form.message} onChange={(e) => field('message', e.target.value)} /></label>
+      {status === 'success' && <p className="form-status form-status--success" role="status">Request received. Aivanta will follow up by email.</p>}
+      {status === 'error' && <p className="form-status form-status--error" role="alert">{error}</p>}
+      <button className="button button--primary button--form" type="submit" disabled={status === 'submitting'}>{status === 'submitting' ? 'Sending...' : 'Start a conversation'} <Icon name="arrow" size={18} /></button>
+    </form>
+  </div></section>;
 }

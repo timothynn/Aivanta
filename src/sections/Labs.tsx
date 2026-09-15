@@ -1,7 +1,7 @@
 import { ArrowRight, Bot, FileSearch, Workflow, ShieldCheck } from 'lucide-react';
 
 const labs = [
-  { title: 'AI-powered document review', description: 'Explore how retrieval, comparison, summaries, and source-aware answers can reduce the effort of working across business documents.', icon: FileSearch, tags: ['RAG', 'Document intelligence', 'Citations'] },
+  { title: 'Shipment File Check', description: 'Try three synthetic shipment documents: compare fields, inspect source evidence, resolve discrepancies, and export a reviewed record.', icon: FileSearch, tags: ['Interactive sample', 'Human review', 'Reviewed export'] },
   { title: 'AI workflow assistant', description: 'See how a bounded agent can gather context, prepare work, and hand actions back to people for review and approval.', icon: Workflow, tags: ['Agents', 'Tool use', 'Human-in-the-loop'] },
   { title: 'Enterprise knowledge assistant', description: 'Turn scattered procedures, policies, and operational knowledge into a conversational layer over existing systems.', icon: Bot, tags: ['Knowledge', 'Search', 'Enterprise AI'] },
 ];
@@ -19,11 +19,11 @@ export function Labs() {
           {labs.map(({ title, description, icon: LabIcon, tags }) => (
             <article className="lab-card" key={title}>
               <div className="lab-icon"><LabIcon size={20} /></div>
-              <span className="lab-label">ILLUSTRATIVE DEMO</span>
+              <span className="lab-label">{title === 'Shipment File Check' ? 'WORKING SYNTHETIC SAMPLE' : 'ILLUSTRATIVE PATTERN'}</span>
               <h3>{title}</h3>
               <p>{description}</p>
               <div className="lab-tags">{tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
-              <a className="proof-link" href="#assessment">Explore this pattern <ArrowRight size={15} /></a>
+              <a className="proof-link" href={title === 'Shipment File Check' ? '/logistics#shipment-check' : '#contact'}>{title === 'Shipment File Check' ? 'Try the sample' : 'Discuss this pattern'} <ArrowRight size={15} /></a>
             </article>
           ))}
         </div>

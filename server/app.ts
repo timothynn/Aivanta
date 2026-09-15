@@ -7,6 +7,7 @@ import { createLeadIntake, leadStatusSchema, type LeadNotifier, type LeadStore }
 import type { CrmAdapter } from './domain/crm.js';
 import { createRateLimit } from './rateLimit.js';
 import { generateOpportunityBrief } from './opportunityBrief.js';
+import { SubmissionConflict } from './domain/lead.js';
 
 type AppDependencies = {
   config: import('./config.js').AppConfig;
@@ -44,7 +45,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
 
   app.post('/api/leads', { preHandler: createRateLimit(12, 60_000) }, async (request, reply) => {
     try { const result = await submitLead(request.body); return reply.code(201).send({ ok: true, leadId: result.leadId }); }
-    catch (error) { if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please check the form and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) }); request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to submit the request right now.' }); }
+    catch (error) { if (error instanceof SubmissionConflict) return reply.code(409).send({ ok: false, message: error.message }); if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please check the form and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) }); request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to submit the request right now.' }); }
   });
 
   app.get('/api/admin/leads', async (request, reply) => {

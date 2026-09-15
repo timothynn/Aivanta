@@ -15,7 +15,7 @@ const baseInstructions = [
 ].join(' ');
 
 async function buildInstructions(messages: ChatMessage[], config: AppConfig): Promise<string> {
-  const latest = messages.at(-1)?.content ?? '';
+  const latest = messages[messages.length - 1]?.content ?? '';
   const entries = await retrieveKnowledge(latest, config);
   if (!entries.length) return baseInstructions;
   const context = entries.map((entry) => `### ${entry.title}\n${entry.content}`).join('\n\n');
@@ -25,7 +25,7 @@ async function buildInstructions(messages: ChatMessage[], config: AppConfig): Pr
 export class LocalSupportChatAssistant implements ChatAssistant {
   async reply(messages: ChatMessage[]): Promise<ChatResponse> {
     const userMessages = messages.filter((message) => message.role === 'user');
-    const latest = userMessages.at(-1)?.content.toLowerCase() ?? '';
+    const latest = userMessages[userMessages.length - 1]?.content.toLowerCase() ?? '';
     const turn = userMessages.length;
     if (latest.includes('price') || latest.includes('cost')) return { message: { role: 'assistant', content: 'Pricing depends on the systems involved, scope, and level of integration. A focused assessment is usually the best first step. What application or workflow would you most like to improve?' } };
     if (turn === 1) return { message: { role: 'assistant', content: 'Aivanta can help add AI to existing applications without starting with a platform rewrite. What system or application would you like to make more intelligent?' } };

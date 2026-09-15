@@ -1,16 +1,19 @@
 import { randomUUID } from 'node:crypto';
 import { qualifyLead } from '../domain/qualification.js';
 import type { LeadRecord, LeadStatus, LeadStore, LeadSubmission } from '../domain/lead.js';
+import { assertSameSubmission } from '../domain/lead.js';
 
 export class InMemoryLeadStore implements LeadStore {
   readonly leads: LeadRecord[] = [];
 
-  async createLead(submission: LeadSubmission): Promise<LeadRecord> {
+  async createLead(submission: LeadSubmission): Promise<{ lead: LeadRecord; created: boolean }> {
+    const existing = submission.submissionId ? this.leads.find((lead) => lead.id === submission.submissionId) : undefined;
+    if (existing) { assertSameSubmission(existing, submission); return { lead: existing, created: false }; }
     const now = new Date();
     const qualification = qualifyLead(submission);
-    const lead: LeadRecord = { ...submission, id: randomUUID(), status: 'new', qualificationScore: qualification.score, qualificationLabel: qualification.label, qualificationReasons: qualification.reasons, createdAt: now, updatedAt: now };
+    const lead: LeadRecord = { ...submission, id: submission.submissionId ?? randomUUID(), status: 'new', qualificationScore: qualification.score, qualificationLabel: qualification.label, qualificationReasons: qualification.reasons, createdAt: now, updatedAt: now };
     this.leads.push(lead);
-    return lead;
+    return { lead, created: true };
   }
 
   async listLeads(): Promise<LeadRecord[]> {

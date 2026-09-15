@@ -1,6 +1,7 @@
 import { FormEvent, useRef, useState } from 'react';
 import { Bot, MessageCircle, Send, Sparkles, X } from 'lucide-react';
 import { generateOpportunityBrief, sendChatMessage, trackEvent, type ChatMessage, type OpportunityBrief } from '../api/client';
+import { saveChatContext } from '../api/enquiryContext';
 
 const initialMessages: ChatMessage[] = [{ role: 'assistant', content: 'Hi, I’m the Aivanta assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.' }];
 const quickPrompts = ['How can AI improve my existing application?', 'What does an AI transformation project look like?', 'Can you help me identify an AI use case?', 'What is an AI transformation assessment?'];
@@ -26,6 +27,7 @@ export function Chatbot() {
     if (!trimmed || sending || briefing) return;
     const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
     setMessages(nextMessages);
+    setBrief(null);
     setDraft('');
     setSending(true);
     setError('');
@@ -47,8 +49,6 @@ export function Chatbot() {
     try {
       const nextBrief = await generateOpportunityBrief(messages.slice(-12));
       setBrief(nextBrief);
-      sessionStorage.setItem('aivanta-opportunity-brief', JSON.stringify(nextBrief));
-      sessionStorage.setItem('aivanta-chat-context', JSON.stringify({ conversation: messages.map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n'), brief: nextBrief, createdAt: new Date().toISOString() }));
       void trackEvent('assistant_brief_prepared', { opportunities: String(nextBrief.opportunities.length) });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to prepare the opportunity brief.');
@@ -58,6 +58,8 @@ export function Chatbot() {
   }
 
   function continueToContact() {
+    saveChatContext({ conversation: messages.map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n').slice(-50000), ...(brief ? { brief } : {}), createdAt: new Date().toISOString() });
+    setOpen(false);
     void trackEvent('consultation_brief_cta_clicked');
     document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }

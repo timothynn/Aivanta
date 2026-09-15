@@ -59,3 +59,11 @@ Vite supports GitHub Pages deployment through a GitHub Actions workflow, and Git
 ## Status
 
 Initial brand, website, contact flow, and backend foundation. The frontend remains static-first, while the backend handles lead intake, persistence, and notification when deployed.
+
+## Logistics offer and demonstration
+
+Run `npm run dev:full` and open `/logistics` to explore the logistics landing page and Shipment File Check. The synthetic sample compares labelled text, shows source evidence, requires human review and exports JSON; it does not claim live AI extraction or client integration.
+
+See [demo scope and verification](docs/logistics-demo.md), [deployment configuration](docs/backend-deployment.md) and [GitHub logistics learning guide](docs/logistics-github-learning-guide.md).
+
+Validation: `npm run typecheck`, `npm test`, `npm run build`, and `npm run build:api`. Set `TEST_DATABASE_URL` to a dedicated `aivanta_test` database to include the PostgreSQL integration test. CI supplies its own PostgreSQL service. The frontend build assumes root hosting and generates a direct `/logistics/` entry point.

@@ -13,6 +13,7 @@ const opportunityBriefSchema = z.object({
 });
 
 export const leadSubmissionSchema = z.object({
+  submissionId: z.uuid().optional(),
   name: z.string().trim().min(2).max(120),
   email: z.email().max(180),
   company: z.string().trim().max(160).optional().or(z.literal('')),
@@ -39,7 +40,7 @@ export type LeadRecord = LeadSubmission & {
 };
 
 export type LeadStore = {
-  createLead(submission: LeadSubmission): Promise<LeadRecord>;
+  createLead(submission: LeadSubmission): Promise<{ lead: LeadRecord; created: boolean }>;
   listLeads(): Promise<LeadRecord[]>;
   updateLeadStatus(id: string, status: LeadStatus): Promise<LeadRecord | null>;
 };
@@ -50,11 +51,24 @@ export type LeadNotifier = {
 
 export type LeadIntakeResult = { leadId: string };
 
+export class SubmissionConflict extends Error {}
+
+export function assertSameSubmission(existing: LeadRecord, submission: LeadSubmission) {
+  const schema = leadSubmissionSchema.omit({ submissionId: true });
+  const normalized = (input: LeadSubmission) => JSON.stringify(schema.parse({ ...input, company: input.company || '', industry: input.industry || '' }));
+  if (normalized(existing) !== normalized(submission)) throw new SubmissionConflict('This request identifier was already used. Please submit a new enquiry.');
+}
+
 export function createLeadIntake(store: LeadStore, notifier: LeadNotifier, crm?: CrmAdapter) {
   return async function submitLead(input: unknown): Promise<LeadIntakeResult> {
     const submission = leadSubmissionSchema.parse(input);
-    const lead = await store.createLead(submission);
-    await notifier.notifyLeadCreated(lead);
+    const { lead, created } = await store.createLead(submission);
+    if (!created) return { leadId: lead.id };
+    try {
+      await notifier.notifyLeadCreated(lead);
+    } catch {
+      console.warn('Lead notification failed; review the saved enquiry in admin.', { leadId: lead.id });
+    }
     if (crm) {
       try {
         await crm.syncLead(lead);
