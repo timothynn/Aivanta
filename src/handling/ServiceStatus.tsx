@@ -28,7 +28,7 @@ export function ServiceStatus() {
         <h1>{state === 'checking' ? 'Checking the service connection…' : online ? 'Veyntis services are reachable.' : 'The application service is unavailable.'}</h1>
         <p>{state === 'checking' ? 'We are checking the public API health endpoint.' : online ? 'The website can reach its configured backend health endpoint.' : 'The website is still available, but the configured backend cannot be reached right now. You can continue browsing, or try again shortly.'}</p>
         <div className="status-indicator"><span className={`status-dot ${online ? 'status-dot--ok' : state === 'checking' ? '' : 'status-dot--error'}`} />{state === 'checking' ? 'Checking…' : online ? 'Backend reachable' : 'Backend unavailable'}</div>
-        <div className="handling-actions"><button className="button button--primary" onClick={() => void check()} type="button"><RefreshCw size={17} /> Check again</button><a className="button button--ghost-dark" href="#top"><ArrowLeft size={17} /> Back to Veyntis</a></div>
+        <div className="handling-actions"><button className="button button--primary" onClick={() => void check()} type="button"><RefreshCw size={17} /> Check again</button><a className="button button--ghost-dark" href="/"><ArrowLeft size={17} /> Back to Veyntis</a></div>
       </section>
     </main>
   );
