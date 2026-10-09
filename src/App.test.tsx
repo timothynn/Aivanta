@@ -45,7 +45,7 @@ describe('App', () => {
 
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: /open aivanta assistant chat/i }));
+    fireEvent.click(screen.getByRole('button', { name: /open veyntis assistant chat/i }));
     expect(screen.getByText('Veyntis Assistant')).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText('Message Veyntis assistant'), {

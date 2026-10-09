@@ -24,7 +24,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   const recordAnalytics = analyticsStore ? createAnalytics(analyticsStore) : null;
 
   await app.register(cors, { origin: config.apiOrigin, methods: ['GET', 'POST', 'PATCH'] });
-  app.get('/api/health', async () => ({ ok: true, service: 'aivanta-api' }));
+  app.get('/api/health', async () => ({ ok: true, service: 'veyntis-api' }));
 
   app.post('/api/events', { preHandler: createRateLimit(60, 60_000) }, async (request, reply) => {
     if (!recordAnalytics) return reply.code(204).send();
