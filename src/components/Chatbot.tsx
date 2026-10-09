@@ -48,7 +48,9 @@ export function Chatbot() {
       const nextBrief = await generateOpportunityBrief(messages.slice(-12));
       setBrief(nextBrief);
       sessionStorage.setItem('aivanta-opportunity-brief', JSON.stringify(nextBrief));
+      sessionStorage.removeItem('aivanta-assessment');
       sessionStorage.setItem('aivanta-chat-context', JSON.stringify({ conversation: messages.map((message) => `${message.role.toUpperCase()}: ${message.content}`).join('\n\n'), brief: nextBrief, createdAt: new Date().toISOString() }));
+      window.dispatchEvent(new Event('veyntis:context-updated'));
       void trackEvent('assistant_brief_prepared', { opportunities: String(nextBrief.opportunities.length) });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to prepare the opportunity brief.');

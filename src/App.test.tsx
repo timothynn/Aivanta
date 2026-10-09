@@ -1,10 +1,11 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 
 describe('App', () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    sessionStorage.clear();
   });
 
   it('submits the contact form to the lead API', async () => {
@@ -35,6 +36,22 @@ describe('App', () => {
       );
     });
     expect(await screen.findByText(/request received/i)).toBeInTheDocument();
+  });
+
+  it('carries an assessment into the already-mounted contact form', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, json: async () => ({ ok: true }) } as Response);
+    render(<App />);
+    const assessment = within(document.getElementById('assessment')!);
+    fireEvent.click(assessment.getByRole('button', { name: 'CRM' }));
+    fireEvent.click(assessment.getByRole('button', { name: /continue/i }));
+    fireEvent.click(assessment.getByRole('button', { name: 'Save time on repetitive work' }));
+    fireEvent.click(assessment.getByRole('button', { name: /continue/i }));
+    fireEvent.click(assessment.getByRole('button', { name: 'Database' }));
+    fireEvent.click(assessment.getByRole('button', { name: /continue/i }));
+    fireEvent.click(assessment.getByRole('button', { name: 'Pilot one workflow' }));
+    fireEvent.click(assessment.getByRole('button', { name: /see recommendation/i }));
+    fireEvent.click(assessment.getByRole('button', { name: /continue to assessment/i }));
+    expect((screen.getByLabelText('What should AI improve?') as HTMLTextAreaElement).value).toContain('System: CRM');
   });
 
   it('opens the chatbot and sends a message', async () => {

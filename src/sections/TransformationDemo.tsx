@@ -50,7 +50,9 @@ const capabilityMeta = [
 
 export function TransformationDemo() {
   const [activeId, setActiveId] = useState<(typeof systems)[number]['id']>('custom');
+  const [selectedCapability, setSelectedCapability] = useState<string | null>(null);
   const active = useMemo(() => systems.find((system) => system.id === activeId) ?? systems[0], [activeId]);
+  const currentCapability = active.ai.some(item => item === selectedCapability) ? selectedCapability : null;
 
   return (
     <section id="demo" className="transformation-demo-section">
@@ -71,7 +73,8 @@ export function TransformationDemo() {
               <button
                 className={`demo-system ${system.id === activeId ? 'demo-system--active' : ''}`}
                 key={system.id}
-                onClick={() => setActiveId(system.id)}
+                onClick={() => { setActiveId(system.id); setSelectedCapability(null); }}
+                aria-pressed={system.id === activeId}
                 type="button"
               >
                 <span className="demo-system-icon">
@@ -126,7 +129,7 @@ export function TransformationDemo() {
                     const CapabilityIcon = capability?.[2] ?? Bot;
                     const description = capability?.[1] ?? 'A focused AI capability connected to your existing application.';
                     return (
-                      <button className="demo-capability" key={item} type="button">
+                      <button className={`demo-capability ${currentCapability === item ? 'is-selected' : ''}`} key={item} type="button" aria-pressed={currentCapability === item} onClick={() => setSelectedCapability(item)}>
                         <span className="demo-capability-icon"><CapabilityIcon size={18} /></span>
                         <span><strong>{item}</strong><small>{description}</small></span>
                         <ArrowRight size={15} />
@@ -141,7 +144,7 @@ export function TransformationDemo() {
               <div className="demo-outcome-mark"><Bot size={21} /></div>
               <div>
                 <span>What changes for the team</span>
-                <p>{active.outcome}</p>
+                <p>{currentCapability ? `${currentCapability}: ${capabilityMeta.find(([name]) => name === currentCapability)?.[1] ?? 'A scoped AI capability connected to your systems.'} ${active.outcome}` : active.outcome}</p>
               </div>
               <a className="button button--primary" href="#contact">Discuss this use case <ArrowRight size={16} /></a>
             </div>

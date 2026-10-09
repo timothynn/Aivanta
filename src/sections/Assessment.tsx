@@ -23,7 +23,9 @@ export function Assessment() {
   }
 
   function startConversation() {
+    sessionStorage.removeItem('aivanta-chat-context');
     sessionStorage.setItem('aivanta-assessment', JSON.stringify(answers));
+    window.dispatchEvent(new Event('veyntis:context-updated'));
     void trackEvent('assessment_completed', { system: answers.system, priority: answers.priority });
     document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
