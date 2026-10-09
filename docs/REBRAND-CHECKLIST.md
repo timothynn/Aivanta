@@ -23,6 +23,7 @@
 - [x] Fix same-tab assessment/chat → contact handoff.
 - [x] Make demo capability selection interactive.
 - [x] Refuse serverless lead submissions without a persistent database instead of acknowledging transient storage.
+- [x] Validate lead-response shape so static HTML (SPA fallback) cannot falsely produce a success confirmation.
 - [x] Prevent failed email notifications from causing a false failure after a lead has been stored.
 - [x] Disable redundant automatic GitHub Pages deploy workflow (Vercel remains production).
 - [ ] Diagnose GitHub Actions jobs failing before any runner steps; this may require GitHub account/repository settings.
