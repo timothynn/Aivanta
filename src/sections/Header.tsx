@@ -1,27 +1,31 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Icon } from '../components/Icon';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { Logo } from '../components/Logo';
 
 const navItems = [
-  ['Services', '#services'],
-  ['Assessment', '#assessment'],
-  ['Labs', '#labs'],
-  ['Proof', '#proof'],
-  ['Industries', '#industries'],
+  ['Solutions', '#services'],
+  ['How it works', '#demo'],
+  ['Engagements', '#engagement'],
+  ['Expertise', '#industries'],
 ] as const;
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  return (
-    <header className="site-header">
-      <div className="container nav-wrap">
-        <Logo />
-        <nav className="nav-links" aria-label="Primary navigation">{navItems.map(([label, href]) => <a href={href} key={href}>{label}</a>)}</nav>
-        <a className="header-cta" href="#engagement">See engagement paths <Icon name="arrow" size={17} /></a>
-        <button aria-expanded={menuOpen} aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} className="menu-toggle" onClick={() => setMenuOpen((current) => !current)} type="button">{menuOpen ? <X aria-hidden="true" size={21} /> : <Menu aria-hidden="true" size={21} />}</button>
-      </div>
-      {menuOpen ? <nav className="mobile-menu" aria-label="Mobile navigation">{navItems.map(([label, href]) => <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>)}<a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a></nav> : null}
-    </header>
-  );
+  return <header className="site-header">
+    <div className="container nav-wrap">
+      <Logo />
+      <nav className="nav-links" aria-label="Primary navigation">
+        {navItems.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
+      </nav>
+      <a className="header-cta" href="#contact">Discuss a project <ArrowUpRight size={16} aria-hidden="true" /></a>
+      <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation"
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMenuOpen(open => !open)}>
+        {menuOpen ? <X size={21} aria-hidden="true" /> : <Menu size={21} aria-hidden="true" />}
+      </button>
+    </div>
+    {menuOpen && <nav id="mobile-navigation" className="mobile-menu" aria-label="Mobile navigation">
+      {navItems.map(([label, href]) => <a href={href} key={href} onClick={() => setMenuOpen(false)}>{label}</a>)}
+      <a href="#contact" onClick={() => setMenuOpen(false)}>Discuss a project</a>
+    </nav>}
+  </header>;
 }
