@@ -21,3 +21,5 @@ createRoot(document.getElementById('root')!).render(
   <React.StrictMode><RouteErrorBoundary>{page}</RouteErrorBoundary></React.StrictMode>,
 );
 if (path === '/' && !isAdmin) void trackEvent('page_view');
+
+import './veyntis.css';

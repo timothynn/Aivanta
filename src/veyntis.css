@@ -1,0 +1,112 @@
+/* Veyntis identity layer. Loaded last to preserve application functionality. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+:root{--navy:#091218;--navy-2:#11251f;--blue:#187a5e;--cyan:#75ddb8;--teal:#46ae8a;--pale:#e3f4ea;--slate:#71847b;--ink:#102821;--muted:#667b71;--line:#d8e4dc;--surface:#f2f5f0;--white:#fff;font-family:'DM Sans',Inter,system-ui,sans-serif}
+html{scroll-padding-top:90px}body{background:#f3f6f2;color:#172920}
+h1,h2,h3,h4,.brand-wordmark{font-family:Manrope,Inter,system-ui,sans-serif}
+.container{width:min(1170px,calc(100% - 48px))}
+.site-header{background:#091218;position:relative;border-bottom:1px solid #263832}
+.nav-wrap{height:78px}
+.brand{width:auto!important;min-width:0!important;flex-basis:auto!important;gap:10px}
+.brand-mark{width:39px!important;height:39px!important;flex-basis:39px!important}
+.brand-wordmark{font-weight:800;font-size:21px!important;letter-spacing:.18em!important}
+.brand-wordmark--light{color:#e7f8ee}.brand-wordmark--dark{color:#13271f}
+.nav-links{gap:27px;font-size:12px;color:#d2e0d8}.nav-links a:hover{color:#75ddb8}
+.header-cta{border:1px solid #658e7b;color:#ebf9f1;padding:12px 17px;border-radius:7px;font-weight:700;font-size:12px}
+.header-cta:hover{background:#12352a;border-color:#75ddb8}
+.menu-toggle{color:#d8eee2;border-color:#365549}.mobile-menu{background:#0d211b}
+.eyebrow{color:#278565;font-size:11px;letter-spacing:.13em;font-weight:700}.eyebrow--light{color:#7be4b7}
+.vy-hero{background:radial-gradient(circle at 85% 25%,#19362d 0%,transparent 36%),#091218;color:#f2f8f3;min-height:0}
+.vy-hero .hero-grid{height:230px;opacity:.12;background-image:radial-gradient(circle,#9ddfbd 1px,transparent 1.3px)}
+.vy-hero-inner{display:block;min-height:0;padding:82px 0 66px}
+.vy-hero .hero-copy{max-width:870px}
+.vy-hero h1{font-size:clamp(38px,5.5vw,68px);max-width:860px;line-height:1.12;letter-spacing:-.052em;font-weight:700}
+.vy-hero h1 span{color:#75ddb8}
+.vy-hero .hero-subcopy{max-width:630px;color:#bbccc4;font-size:16px;line-height:1.8;margin-top:23px}
+.vy-hero .hero-actions{margin-top:31px}
+.vy-hero .button{font-size:13px;border-radius:7px;padding:14px 19px}
+.vy-hero .button--primary{background:#75ddb8;color:#092119;box-shadow:none}
+.vy-hero .button--primary:hover{background:#a4efce}
+.vy-hero .button--ghost{border:1px solid #537365;color:#ebf4ed;background:transparent}
+.vy-hero .button--ghost:hover{border-color:#9fe5c4;background:#18342a}
+.vy-hero-micro{display:flex;align-items:center;gap:10px;margin-top:25px;color:#8ca99c;font-size:11px;letter-spacing:.03em}
+.vy-micro-divider{opacity:.6}
+.vy-signal{display:inline-block;width:7px;height:7px;border-radius:50%;background:#75ddb8;box-shadow:0 0 0 3px #75ddb81f}
+.vy-system{margin-top:64px;border:1px solid #365149;border-radius:11px;overflow:hidden;background:#0d1d1e;box-shadow:0 24px 65px #00000024}
+.vy-system-head,.vy-system-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 22px;color:#a4c8b6;font:600 10px ui-monospace,Consolas,monospace;letter-spacing:.07em;border-bottom:1px solid #283c38}
+.vy-system-state{display:flex;align-items:center;gap:9px}
+.vy-system-foot{border-top:1px solid #283c38;border-bottom:0;justify-content:flex-start;gap:18px}
+.vy-system-flow{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr) 34px minmax(0,1fr);gap:10px;padding:23px;align-items:center}
+.vy-system-node{border:1px solid #2e4943;background:#102325;border-radius:7px;padding:21px 20px;min-height:196px}
+.vy-system-node--active{border-color:#57ba92;background:#122c27}
+.vy-node-label{display:flex;align-items:center;gap:8px;color:#dfefe7;font:700 10px ui-monospace,monospace;letter-spacing:.065em;margin-bottom:20px}
+.vy-system-node--active .vy-node-label{color:#8de7bf}
+.vy-flow-line{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:12px;color:#b6c9c1}
+.vy-flow-line svg{color:#75ddb8}
+.vy-flow-square{border:1px solid #6b877b;width:11px;height:11px;display:inline-block}
+.vy-flow-dot{width:8px;height:8px;border-radius:50%;background:#75ddb8}
+.vy-flow-arrow{text-align:center;color:#82caaa;font-size:23px}
+.section,.transformation-demo-section,.engagement-section,.proof-section,.assessment-section,.contact-section{scroll-margin-top:70px}
+.section--services{padding:92px 0 98px;background:#eff3ee}
+.vy-split-heading{display:grid!important;grid-template-columns:1.1fr .7fr;align-items:end;gap:48px;text-align:left!important;justify-items:stretch!important;max-width:none!important;margin:0 0 33px!important}
+.vy-split-heading h2{font-size:clamp(29px,3.4vw,43px);letter-spacing:-.04em;line-height:1.16;margin:0;color:#10261d}
+.vy-split-heading>p,.vy-split-heading>div+p{font-size:14px;line-height:1.8;color:#6b8074;margin:0}
+.service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.service-card{background:#fff;border:1px solid #d7e4d9;box-shadow:none;border-radius:9px;padding:26px;min-height:300px;position:relative;display:flex;flex-direction:column}
+.service-card:hover{box-shadow:0 15px 38px #133c2a12;transform:translateY(-2px);border-color:#a9c6b5}
+.service-number{order:0;color:#39896a;font:700 10px ui-monospace,monospace;letter-spacing:.09em;margin-bottom:23px}
+.service-icon{order:1;background:#eaf4ec;border-radius:9px;color:#238262;border:1px solid #d5e8db;display:grid;place-items:center;width:46px;height:46px;margin:0 0 21px}
+.service-card h3{order:2;font-size:18px;color:#142920;letter-spacing:-.025em;margin:0 0 11px}
+.service-card p{order:3;font-size:13px;line-height:1.75;color:#6c7d74;margin:0 0 17px}
+.vy-service-link{order:4;margin-top:auto;color:#146a50;font-size:12px;font-weight:750;display:inline-flex;align-items:center;gap:6px}
+.transformation-demo-section{padding:84px 0;background:#fff}
+.demo-heading h2{color:#13281f;letter-spacing:-.04em}
+.demo-shell{border:1px solid #d3e4da;box-shadow:0 20px 48px #1c493011;background:#fff}
+.demo-sidebar{background:#f2f7f2;border-right:1px solid #dfece3}
+.demo-system--active{border-color:#9cc8ad!important;box-shadow:none}
+.demo-system-icon,.demo-outcome-mark,.demo-capability-icon{color:#18805d!important;background:#e5f4ea!important}
+.demo-journey-node--ai{border-color:#a4cbb5;background:#eff8f1;color:#197b5e}
+.demo-capability:hover{border-color:#82bd9c}
+.demo-outcome{border-color:#c9e1cf;background:#f4faf5}.demo-kicker{color:#21795e}
+.engagement-section{background:#f2f5ef;padding:85px 0}
+.engagement-card{background:#fff;border:1px solid #d9e5d9;box-shadow:none;border-radius:10px}
+.engagement-card--featured{border-color:#469b73;box-shadow:0 14px 34px #183e2911}
+.engagement-name,.engagement-step{color:#258363}.engagement-list svg{color:#299366}
+.vy-engagement-link{display:inline-flex;align-items:center;gap:8px;color:#1b7255;font-weight:750;font-size:12px;margin-top:18px}
+.vy-proof{padding:88px 0;background:#0d211d;color:#ecf7ed}
+.vy-proof .eyebrow{color:#8fe3b8}.vy-proof .vy-split-heading h2{color:#f2faf4}
+.vy-proof .vy-split-heading>p{color:#b5cfc1}
+.vy-principles-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.vy-principle{padding:27px;background:#122c25;border:1px solid #355447;border-radius:9px}
+.vy-principle svg{color:#86dcaf}.vy-principle h3{font-size:16px;margin:19px 0 8px}
+.vy-principle p{font-size:13px;line-height:1.8;color:#acc7b7;margin:0}
+.vy-proof-note{display:flex;align-items:center;gap:18px;border-top:1px solid #345348;margin-top:38px;padding-top:22px}
+.vy-proof-note>svg{flex:none;color:#9fdfb8}
+.vy-proof-note p{flex:1;font-size:12px;line-height:1.7;color:#b8c9c0;margin:0}
+.vy-proof-note strong{color:#fff}
+.vy-proof-note a{font-size:12px;font-weight:700;color:#a5ecc5;display:inline-flex;gap:8px;align-items:center}
+.vy-industries{padding:90px 0;background:#f6f8f5}
+.vy-industries .industry-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.vy-industries .industry-grid article{background:#fff;border:1px solid #d9e5db;border-radius:9px;padding:20px;display:block}
+.vy-industries .industry-icon{color:#1f8562;background:#e9f5ec;margin-bottom:15px;border-radius:7px}
+.vy-industries .industry-grid h3{font-size:14px}.vy-industries .industry-grid p{font-size:12px;line-height:1.6}
+.assessment-section{padding:85px 0;background:#fff}
+.assessment-shell{border-color:#d7e8d9}
+.assessment-step.is-active,.assessment-option.is-selected{border-color:#67b890}
+.assessment-option-icon{color:#168362;background:#eaf5ed}
+.contact-section{background:#10241e;color:#eef9f0}
+.contact-copy h2{color:#f4fff8}.contact-copy>p{color:#bad0c0}
+.contact-section .eyebrow{color:#8bdab1}
+.contact-section input:focus,.contact-section select:focus,.contact-section textarea:focus{border-color:#62c093}
+.legal-section{padding:35px 0;background:#ecf2ed}
+.legal-grid h2{font-size:17px!important}.legal-grid p{font-size:12px!important;line-height:1.7}
+.footer{background:#091218;color:#dcefe3;padding:0}
+.vy-footer-top{display:flex;justify-content:space-between;gap:25px;padding:55px 0 45px}
+.vy-footer-top p{font-size:13px;color:#9fb5a7;margin:13px 0 0}
+.vy-footer-links{display:flex;align-items:center;gap:22px;flex-wrap:wrap;font-size:12px}
+.vy-footer-links a{display:inline-flex;gap:6px;align-items:center}
+.footer-bottom{padding:21px 0;border-top:1px solid #2c4038;display:flex;justify-content:space-between;gap:20px;color:#9aada1;font-size:11px}
+.footer-bottom>div{display:flex;gap:18px;flex-wrap:wrap}
+@media(max-width:900px){.vy-industries .industry-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.vy-system-flow{gap:5px;padding:15px}.vy-system-node{padding:17px 13px}.vy-node-label{font-size:9px}.vy-split-heading{grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.container{width:calc(100% - 34px)}.vy-hero-inner{padding:61px 0 42px}.vy-hero h1{font-size:clamp(34px,9vw,47px)}.vy-hero .hero-subcopy{font-size:14px}.vy-system{margin-top:40px}.vy-system-flow{grid-template-columns:1fr}.vy-flow-arrow{transform:rotate(90deg);line-height:1}.vy-system-node{min-height:0;padding:20px}.vy-system-head{font-size:8px}.vy-system-state{display:none}.vy-system-foot{font-size:9px;flex-wrap:wrap;gap:7px}.vy-split-heading{grid-template-columns:1fr;gap:14px}.service-grid,.engagement-grid,.vy-principles-grid{grid-template-columns:1fr}.service-card{min-height:0}.vy-industries .industry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vy-proof-note{align-items:flex-start;flex-wrap:wrap}.vy-proof-note p{flex:1 1 calc(100% - 50px)}.vy-proof-note a{margin-left:38px}.vy-footer-top{flex-direction:column;padding:40px 0 28px}.vy-footer-links{gap:16px}.footer-bottom{flex-direction:column;gap:10px}.nav-wrap{height:70px}}
+@media(max-width:410px){.vy-industries .industry-grid{grid-template-columns:1fr}.vy-footer-links{gap:12px}.vy-hero .button{width:100%}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
