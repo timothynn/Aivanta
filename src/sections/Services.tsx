@@ -1,27 +1,22 @@
+import { ArrowUpRight } from 'lucide-react';
 import { Icon } from '../components/Icon';
 import { services } from '../data/siteContent';
 
 export function Services() {
-  return (
-    <section id="services" className="section section--services">
-      <div className="container">
-        <div className="section-heading centered">
-          <p className="eyebrow">What We Do</p>
-          <h2>End-to-end AI transformation services.</h2>
-        </div>
-        <div className="service-grid">
-          {services.map((service) => (
-            <article className="service-card" key={service.number}>
-              <div className="service-icon">
-                <Icon name={service.icon} size={28} />
-              </div>
-              <div className="service-number">{service.number}</div>
-              <h3>{service.title}</h3>
-              <p>{service.body}</p>
-            </article>
-          ))}
-        </div>
+  return <section id="services" className="section section--services" aria-labelledby="services-title">
+    <div className="container">
+      <div className="section-heading vy-split-heading">
+        <div><p className="eyebrow">02 / What we engineer</p><h2 id="services-title">Intelligence where it matters.</h2></div>
+        <p>Practical AI. Engineered around your existing systems, the people using them and the outcomes that count.</p>
       </div>
-    </section>
-  );
+      <div className="service-grid">
+        {services.map(service => <article className="service-card" key={service.number}>
+          <span className="service-number">{service.number} / SOLUTION</span>
+          <div className="service-icon"><Icon name={service.icon} size={22} /></div>
+          <h3>{service.title}</h3><p>{service.body}</p>
+          <a href="#contact" className="vy-service-link">Discuss this solution <ArrowUpRight size={16} aria-hidden="true" /></a>
+        </article>)}
+      </div>
+    </div>
+  </section>;
 }
