@@ -9,7 +9,7 @@ const baseConfig: AppConfig = {
   aiApiKey: 'generic-key',
   geminiApiKey: 'gemini-key',
   geminiModel: 'gemini-2.0-flash',
-  leadNotificationFrom: 'Aivanta <hello@aivanta.ai>',
+  leadNotificationFrom: 'Veyntis <hello@aivanta.ai>',
   openaiModel: 'gpt-5',
   port: 8787,
 };
@@ -28,7 +28,7 @@ describe('support chat assistant adapters', () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       json: async () => ({
-        candidates: [{ content: { parts: [{ text: 'Aivanta can help with Gemini-backed support.' }] } }],
+        candidates: [{ content: { parts: [{ text: 'Veyntis can help with Gemini-backed support.' }] } }],
       }),
     } as Response);
 
@@ -42,6 +42,6 @@ describe('support chat assistant adapters', () => {
         headers: expect.objectContaining({ 'x-goog-api-key': 'gemini-key' }),
       }),
     );
-    expect(response.message.content).toBe('Aivanta can help with Gemini-backed support.');
+    expect(response.message.content).toBe('Veyntis can help with Gemini-backed support.');
   });
 });

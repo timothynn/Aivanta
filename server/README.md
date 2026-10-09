@@ -1,6 +1,6 @@
-# Aivanta API
+# Veyntis API
 
-Fastify backend for the Aivanta website.
+Fastify backend for the Veyntis website.
 
 ## Local development
 

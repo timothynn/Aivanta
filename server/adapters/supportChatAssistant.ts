@@ -3,10 +3,10 @@ import { retrieveKnowledge } from '../knowledge/aivantaKnowledge.js';
 import type { ChatAssistant, ChatMessage, ChatResponse } from '../domain/chat.js';
 
 const baseInstructions = [
-  'You are Aivanta Assistant, the AI transformation discovery guide for Aivanta.',
+  'You are Veyntis Assistant, the AI transformation discovery guide for Veyntis.',
   'Help visitors identify practical AI opportunities in the software, data, documents, and workflows their business already uses.',
   'Be concise, practical, professional, and human. Avoid AI hype and unsupported claims.',
-  'Treat supplied Aivanta knowledge context as trusted company context. Do not invent services, customers, case studies, prices, testimonials, integrations, or outcomes.',
+  'Treat supplied Veyntis knowledge context as trusted company context. Do not invent services, customers, case studies, prices, testimonials, integrations, or outcomes.',
   'Guide the conversation toward a lightweight discovery brief by learning the existing application, workflow or user group, pain point or desired outcome, and useful information sources.',
   'Ask one useful discovery question at a time. Do not interrogate the visitor with a long checklist.',
   'When enough context is available, summarize the opportunity in plain language and suggest a practical starting point such as an assessment, focused pilot, document intelligence capability, assistant, or bounded workflow agent.',
@@ -19,7 +19,7 @@ async function buildInstructions(messages: ChatMessage[], config: AppConfig): Pr
   const entries = await retrieveKnowledge(latest, config);
   if (!entries.length) return baseInstructions;
   const context = entries.map((entry) => `### ${entry.title}\n${entry.content}`).join('\n\n');
-  return `${baseInstructions}\n\nTrusted Aivanta knowledge context for this turn:\n${context}`;
+  return `${baseInstructions}\n\nTrusted Veyntis knowledge context for this turn:\n${context}`;
 }
 
 export class LocalSupportChatAssistant implements ChatAssistant {
@@ -28,7 +28,7 @@ export class LocalSupportChatAssistant implements ChatAssistant {
     const latest = userMessages.at(-1)?.content.toLowerCase() ?? '';
     const turn = userMessages.length;
     if (latest.includes('price') || latest.includes('cost')) return { message: { role: 'assistant', content: 'Pricing depends on the systems involved, scope, and level of integration. A focused assessment is usually the best first step. What application or workflow would you most like to improve?' } };
-    if (turn === 1) return { message: { role: 'assistant', content: 'Aivanta can help add AI to existing applications without starting with a platform rewrite. What system or application would you like to make more intelligent?' } };
+    if (turn === 1) return { message: { role: 'assistant', content: 'Veyntis can help add AI to existing applications without starting with a platform rewrite. What system or application would you like to make more intelligent?' } };
     if (turn === 2) return { message: { role: 'assistant', content: 'What is the biggest pain point in that workflow today — for example, searching for information, repetitive work, document review, customer support, or a multi-step process?' } };
     if (turn === 3) return { message: { role: 'assistant', content: 'What information would the AI need to work with: database records, documents, APIs, emails/files, or another source?' } };
     return { message: { role: 'assistant', content: 'Based on what you have shared, this looks like a good candidate for a focused AI transformation assessment. Use “Prepare consultation brief” below when you are ready.' } };

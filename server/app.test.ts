@@ -10,7 +10,7 @@ const config: AppConfig = {
   aiVendor: 'local',
   aiModel: '',
   geminiModel: 'gemini-2.0-flash',
-  leadNotificationFrom: 'Aivanta <hello@aivanta.ai>',
+  leadNotificationFrom: 'Veyntis <hello@aivanta.ai>',
   openaiModel: 'gpt-5',
   port: 8787,
 };
@@ -28,7 +28,7 @@ const validBody = {
 function createChatAssistant(): ChatAssistant {
   return {
     reply: vi.fn().mockResolvedValue({
-      message: { role: 'assistant', content: 'Aivanta can help with that workflow.' },
+      message: { role: 'assistant', content: 'Veyntis can help with that workflow.' },
     }),
   };
 }
@@ -110,7 +110,7 @@ describe('createApp', () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({
       ok: true,
-      message: { role: 'assistant', content: 'Aivanta can help with that workflow.' },
+      message: { role: 'assistant', content: 'Veyntis can help with that workflow.' },
     });
   });
 });

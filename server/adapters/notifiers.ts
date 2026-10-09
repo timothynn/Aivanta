@@ -3,7 +3,7 @@ import type { LeadNotifier, LeadRecord } from '../domain/lead.js';
 
 export class ConsoleLeadNotifier implements LeadNotifier {
   async notifyLeadCreated(lead: LeadRecord): Promise<void> {
-    console.info('New Aivanta lead', {
+    console.info('New Veyntis lead', {
       id: lead.id,
       name: lead.name,
       email: lead.email,
@@ -30,7 +30,7 @@ export class ResendLeadNotifier implements LeadNotifier {
       body: JSON.stringify({
         from: this.config.leadNotificationFrom,
         to: this.config.leadNotificationTo,
-        subject: `New Aivanta lead: ${lead.name}`,
+        subject: `New Veyntis lead: ${lead.name}`,
         text: [
           `Name: ${lead.name}`,
           `Email: ${lead.email}`,
