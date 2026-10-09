@@ -10,7 +10,7 @@ export function Engagement() {
   return <section id="engagement" className="engagement-section"><div className="container">
     <div className="section-heading vy-split-heading">
       <div><p className="eyebrow">04 / Work together</p><h2>Start small. Prove value. Scale deliberately.</h2></div>
-      <p>No vague transformation promises. Choose the smallest meaningful engagement and build from evidence.</p>
+      <p>A practical engagement begins with a discovery call, written scope and acceptance criteria. Timelines and fees are proposed after we understand your requirements.</p>
     </div>
     <div className="engagement-grid">{tiers.map((tier,i) => <article className={`engagement-card ${i===1?'engagement-card--featured':''}`} key={tier.name}>
       <span className="engagement-step">0{i+1}</span><span className="engagement-name">{tier.name}</span>

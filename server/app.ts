@@ -7,6 +7,7 @@ import { createLeadIntake, leadStatusSchema, type LeadNotifier, type LeadStore }
 import type { CrmAdapter } from './domain/crm.js';
 import { createRateLimit } from './rateLimit.js';
 import { generateOpportunityBrief } from './opportunityBrief.js';
+import { registerApiDocumentation } from './apiDocs.js';
 
 type AppDependencies = {
   config: import('./config.js').AppConfig;
@@ -27,6 +28,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   // configured origin for existing deployments and local development.
   const allowedOrigins = [...new Set([config.apiOrigin, 'https://veyntis.vercel.app'])];
   await app.register(cors, { origin: allowedOrigins, methods: ['GET', 'POST', 'PATCH'] });
+  registerApiDocumentation(app);
   app.get('/api/health', async () => ({ ok: true, service: 'veyntis-api' }));
 
   app.post('/api/events', { preHandler: createRateLimit(60, 60_000) }, async (request, reply) => {

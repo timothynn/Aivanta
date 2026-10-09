@@ -6,8 +6,8 @@ export function Footer() {
     <div className="container vy-footer-top">
       <div><Logo className="brand--footer" /><p>Intelligence, engineered into your operations.</p></div>
       <div className="vy-footer-links">
-        <a href="#services">Solutions</a><a href="#demo">How it works</a><a href="#engagement">Engagements</a>
-        <a href="#contact">Contact <ArrowUpRight size={13} /></a>
+        <a href="#services">Solutions</a><a href="#proof">About</a><a href="#demo">How it works</a><a href="#engagement">Engagements</a>
+        <a href="#contact">Contact <ArrowUpRight size={13} /></a><a href="https://veyntis-backend.vercel.app/docs" target="_blank" rel="noreferrer">API docs ↗</a>
       </div>
     </div>
     <div className="container footer-bottom">
