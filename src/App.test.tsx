@@ -38,6 +38,22 @@ describe('App', () => {
     expect(await screen.findByText(/request received/i)).toBeInTheDocument();
   });
 
+  it('does not acknowledge a successful HTML fallback as a saved lead', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: true,
+      json: async () => { throw new SyntaxError('Unexpected token <'); },
+    } as Response);
+    render(<App />);
+    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Jane Doe' } });
+    fireEvent.change(screen.getByLabelText('Work email'), { target: { value: 'jane@example.com' } });
+    fireEvent.change(screen.getByLabelText('What should AI improve?'), {
+      target: { value: 'Please help improve this workflow.' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /start a conversation/i }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('could not be confirmed');
+    expect(screen.queryByText(/request received/i)).not.toBeInTheDocument();
+  });
+
   it('carries an assessment into the already-mounted contact form', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({ ok: true, json: async () => ({ ok: true }) } as Response);
     render(<App />);
