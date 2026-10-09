@@ -1,6 +1,6 @@
-# Aivanta Lead Operations
+# Veyntis Lead Operations
 
-Aivanta uses a lightweight internal lead pipeline instead of a full CRM at this stage.
+Veyntis uses a lightweight internal lead pipeline instead of a full CRM at this stage.
 
 ## Qualification
 

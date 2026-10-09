@@ -1,12 +1,12 @@
-# Aivanta Website Implementation Plan
+# Veyntis Website Implementation Plan
 
 ## 1. Product goal
 
-Build a focused marketing website for Aivanta that explains one idea clearly:
+Build a focused marketing website for Veyntis that explains one idea clearly:
 
 > **Turn software into intelligent software.**
 
-The site should make Aivanta feel like an engineering-led AI consultancy that modernizes existing software rather than a generic chatbot or prompt agency.
+The site should make Veyntis feel like an engineering-led AI consultancy that modernizes existing software rather than a generic chatbot or prompt agency.
 
 ## 2. Recommended stack
 
@@ -31,12 +31,12 @@ Keep the app architecture independent of hosting so it can later move to Vercel,
 
 1. Hero
 2. The problem: useful business software is often disconnected from modern AI
-3. The Aivanta approach
+3. The Veyntis approach
 4. Services
 5. How transformation works
 6. Industries
 7. Example transformation patterns
-8. Why Aivanta
+8. Why Veyntis
 9. Call to action
 10. Footer
 
@@ -107,7 +107,7 @@ Keep components small and reusable, but avoid overengineering a one-page marketi
 - Initialize React + TypeScript + Vite
 - Establish typography and design tokens
 - Add favicon/metadata scaffolding
-- Add the Aivanta logo assets once generated
+- Add the Veyntis logo assets once generated
 - Build the base layout and navigation
 
 ### Phase 2 — Core experience
@@ -150,7 +150,7 @@ Keep components small and reusable, but avoid overengineering a one-page marketi
 
 The first public release should answer these questions within seconds:
 
-1. What is Aivanta?
+1. What is Veyntis?
 2. Who is it for?
 3. What does it actually do?
 4. Why should a company work with it?

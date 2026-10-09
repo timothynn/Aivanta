@@ -1,4 +1,4 @@
-# Aivanta Backend Design
+# Veyntis Backend Design
 
 ## Goal
 
@@ -94,7 +94,7 @@ Success:
   "ok": true,
   "message": {
     "role": "assistant",
-    "content": "Aivanta can help assess and integrate that workflow..."
+    "content": "Veyntis can help assess and integrate that workflow..."
   }
 }
 ```

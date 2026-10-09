@@ -1,6 +1,6 @@
-# Aivanta Assistant Knowledge
+# Veyntis Assistant Knowledge
 
-The public Aivanta assistant is grounded in a curated knowledge layer before provider-specific generation.
+The public Veyntis assistant is grounded in a curated knowledge layer before provider-specific generation.
 
 ## Current approach
 
@@ -10,7 +10,7 @@ This intentionally avoids a vector database at the current stage. The goal is to
 
 ## Knowledge categories
 
-- Aivanta positioning
+- Veyntis positioning
 - AI transformation assessment
 - AI integration
 - Agentic workflows
@@ -25,4 +25,4 @@ When the content volume or client-facing knowledge requirements justify it, repl
 
 ## Content governance
 
-Only publish claims Aivanta can substantiate. Do not put client-confidential information, employer-confidential information, unpublished client work, credentials, or internal system details into this knowledge layer.
+Only publish claims Veyntis can substantiate. Do not put client-confidential information, employer-confidential information, unpublished client work, credentials, or internal system details into this knowledge layer.

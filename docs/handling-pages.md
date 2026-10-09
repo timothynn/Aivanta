@@ -1,4 +1,4 @@
-# Aivanta handling pages
+# Veyntis handling pages
 
 The public site now has dedicated recovery and diagnostics pages:
 

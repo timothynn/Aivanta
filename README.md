@@ -1,61 +1,46 @@
-# Aivanta
+# VEYNTIS
 
-AI software consultancy focused on turning existing business applications into intelligent, AI-enabled systems.
+**Applied AI & Systems Engineering** · *Intelligence, engineered into your operations.*
 
-## Positioning
+Veyntis is an independent engineering studio focused on making existing business software more useful with practical AI. We connect applications, documents, data and workflows through well-scoped, measurable integrations.
 
-> **Turn software into intelligent software.**
+> Your systems already work. Make them work smarter.
 
-Aivanta helps businesses integrate practical AI capabilities into the applications, data, documents, and workflows they already rely on.
+## What we engineer
 
-## Website direction
+| Solution | Outcome |
+| --- | --- |
+| **AI Integration** | AI features inside existing applications and APIs |
+| **Workflow Intelligence** | Scoped automation, agent-assisted tasks and human approval |
+| **Knowledge Systems** | Grounded search, document intelligence and accessible company knowledge |
 
-The website will position Aivanta as an engineering-led AI consultancy rather than a generic chatbot or automation agency.
+## How we work
 
-### Core services
+**Discover → Prove → Scale.** Start with one real workflow and a clear baseline; expand only after measuring results.
 
-- AI Application Assessment
-- AI Integration
-- Agentic Workflows
-- Enterprise Knowledge & Document Intelligence
-- AI Application Modernization
+Focus domains include aviation, logistics, financial systems, professional services and enterprise software. These are areas of interest and expertise, **not** customer claims.
 
-### Target clients
+## Site and architecture
 
-Aivanta is intended for organizations that already have business software, structured data, documents, and established workflows, especially in complex or regulated industries.
+- **Frontend:** React 19, TypeScript, Vite, responsive CSS
+- **Interactive:** system transformation demo, opportunity assessment, contact journey and business assistant
+- **API:** Fastify, Postgres-backed leads/analytics when configured, AI provider adapters, optional CRM/email integrations
+- **Safeguards:** permissions, source-aware answers, human review and honest example labeling
 
-Aviation is an area of particular domain experience, but the brand should remain broad enough to serve other industries.
-
-## Planned website stack
-
-- React + TypeScript
-- Vite
-- Modern responsive CSS
-- Lightweight animation only where it improves clarity
-- Static-first architecture with no backend required for the initial marketing site
-- GitHub Actions for deployment
-- GitHub Pages for initial hosting
-
-Vite supports GitHub Pages deployment through a GitHub Actions workflow, and GitHub Pages supports custom domains. See the implementation plan in `docs/website-plan.md`.
-
-## Repository structure
-
-```text
-.
-├── docs/
-├── public/
-├── server/
-│   ├── adapters/
-│   ├── domain/
-│   └── migrations/
-├── src/
-│   ├── api/
-│   ├── components/
-│   ├── data/
-│   └── sections/
-└── README.md
+```bash
+npm ci
+npm run dev:full       # frontend + local API
+npm run typecheck
+npm test
+npm run build
 ```
 
-## Status
+`VITE_API_BASE_URL` points the frontend at the deployed API when they use separate Vercel projects. See `server/README.md` and `docs/production-supabase-vercel.md`.
 
-Initial brand, website, contact flow, and backend foundation. The frontend remains static-first, while the backend handles lead intake, persistence, and notification when deployed.
+## Rollout
+
+The GitHub repository name, legacy internal storage keys, old deployment URLs and email sender domains remain unchanged until their owner completes a controlled cutover. **Do not rename an in-use API, email sender or production domain blindly.** Follow [the cutover checklist](docs/REBRAND-CHECKLIST.md).
+
+Client examples in this repository are illustrative unless explicitly documented otherwise. No confidential employer or customer implementations are represented.
+
+Website code © its author. No additional license is implied.

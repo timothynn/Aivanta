@@ -1,4 +1,4 @@
-# Aivanta Proof & Trust Layer
+# Veyntis Proof & Trust Layer
 
 ## Purpose
 
@@ -8,7 +8,7 @@ The proof layer is designed to increase credibility without inventing customers,
 
 ### Illustrative scenarios
 
-Use clearly labeled scenarios to show the kinds of systems and workflows Aivanta can improve:
+Use clearly labeled scenarios to show the kinds of systems and workflows Veyntis can improve:
 
 - AI-assisted document review
 - AI workflow assistant
@@ -29,7 +29,7 @@ Do not publish numerical improvements until they are supported by real project e
 
 ### Integration credibility
 
-Show that Aivanta is designed to work with existing application layers, APIs, databases, documents, AI services, and security controls rather than requiring a wholesale platform replacement.
+Show that Veyntis is designed to work with existing application layers, APIs, databases, documents, AI services, and security controls rather than requiring a wholesale platform replacement.
 
 ### Responsible AI
 
