@@ -8,19 +8,19 @@ The frontend uses `VITE_API_BASE_URL` when configured; otherwise it calls `/api/
 
 ## Important deployment finding
 
-The repository currently contains no `vercel.json` and the default Vercel build is the Vite frontend (`npm run build`). Therefore, deploying the repository to Vercel does not automatically deploy `server/index.ts` as a backend.
+The repository's root `vercel.json` rewrites frontend requests to `/index.html` for SPA routing. The frontend and Fastify backend are deployed as separate Vercel projects. The root frontend build (`npm run build`) does not itself deploy `server/index.ts`.
 
 A production deployment is connected to the Fastify backend only when `VITE_API_BASE_URL` points to a separately deployed API, or when a future Vercel serverless adapter is introduced.
 
 ## Recommended production setup
 
-For the current architecture, deploy the Fastify API as a separate Node service and configure:
+For the current architecture, maintain the Fastify API as a separate Vercel project and configure:
 
 ```text
 VITE_API_BASE_URL=https://<api-host>
 ```
 
-Backend environment variables should include the PostgreSQL connection, AI provider, admin token, CRM configuration, and notification settings.
+Set the backend `API_ORIGIN=https://veyntis.vercel.app` in its production environment. Backend environment variables should also include the PostgreSQL connection, AI provider, admin token, CRM configuration, and notification settings.
 
 ## Health check
 

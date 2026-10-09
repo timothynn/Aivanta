@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aivanta-beryl.vercel.app/sitemap.xml
+Sitemap: https://veyntis.vercel.app/sitemap.xml

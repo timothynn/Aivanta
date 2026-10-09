@@ -21,7 +21,7 @@ server/migrations/003_lead_qualification.sql
 
 ## 2. Veyntis Backend Vercel project
 
-Project: `aivanta-backend`
+Project: `aivanta-backend` (existing backend name; not part of the frontend rename)
 
 Root Directory:
 
@@ -33,7 +33,7 @@ Server-side environment variables:
 
 ```text
 DATABASE_URL=<Supabase PostgreSQL connection string>
-API_ORIGIN=https://aivanta-beryl.vercel.app
+API_ORIGIN=https://veyntis.vercel.app
 ADMIN_TOKEN=<random secret>
 
 AI_VENDOR=openai
@@ -54,7 +54,7 @@ Only the variables needed for enabled integrations need to be set.
 
 ## 3. Veyntis Web Vercel project
 
-Project: existing Veyntis frontend.
+Project: `veyntis` (frontend, linked to `timothynn/Veyntis`).
 
 Add:
 
@@ -75,7 +75,7 @@ https://aivanta-backend.vercel.app/api/health
 Frontend status page:
 
 ```text
-https://aivanta-beryl.vercel.app/status
+https://veyntis.vercel.app/status
 ```
 
 Then test the end-to-end flow:

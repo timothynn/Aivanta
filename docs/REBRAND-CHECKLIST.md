@@ -1,31 +1,34 @@
 # Veyntis deployment and cutover checklist
 
-The repository is intentionally still named `timothynn/Aivanta` until GitHub repository settings are changed by its owner. The prior deployment and sender domains must stay functional until the new ones are verified.
+## Confirmed identity
+- [x] GitHub repository renamed to [timothynn/Veyntis](https://github.com/timothynn/Veyntis).
+- [x] Vercel frontend project renamed to `veyntis`.
+- [x] Public frontend hostname selected: [veyntis.vercel.app](https://veyntis.vercel.app/).
+- [x] Website's canonical link, Open Graph URL, robots.txt and sitemap aligned in source code.
 
-## Before changing the public URL
-- [ ] Verify **Veyntis** business name, trademark, domain and social handle availability.
-- [ ] Purchase and connect the chosen domain in Vercel.
-- [ ] Confirm whether the `aivanta` frontend and `aivanta-backend` Vercel projects should be renamed.
-- [ ] Update the backend's `API_ORIGIN` for the new frontend URL.
-- [ ] Update frontend `VITE_API_BASE_URL` only if the API hostname changes.
-- [ ] Update `public/sitemap.xml` and `public/robots.txt` to point to the final canonical URL.
-- [ ] Update the canonical URL and absolute Open Graph image URL once the final domain is known.
-- [ ] Verify the email sender domain with the provider, then update `LEAD_NOTIFICATION_FROM` and `LEAD_NOTIFICATION_TO` as needed.
-- [ ] Update any CRM integration names, booking URLs and partner links once verified.
-- [ ] Review any `aivanta-*` sessionStorage keys only after an explicit client-state migration plan; legacy keys preserve in-progress lead briefs.
-- [ ] Preserve database schema, API endpoints, historical lead events, and operational secrets.
+## Still requires account-level verification
+- [ ] Ensure Vercel frontend production alias `veyntis.vercel.app` serves the latest deployment (cannot confirm through source code).
+- [ ] Set the **existing backend** project environment variable `API_ORIGIN=https://veyntis.vercel.app` for production (and appropriate preview origins if needed); redeploy backend.
+- [ ] Confirm that frontend `VITE_API_BASE_URL` is still pointing at the existing backend project URL; only change it if backend URL changes. Redeploy frontend after a change.
+- [ ] Confirm Vercel frontend/backend Git integration still tracks `timothynn/Veyntis` after GitHub rename.
+- [ ] Keep the backend hostname until verified; the frontend rename does not automatically rename its separate backend.
+- [ ] Verify a sending domain and set `LEAD_NOTIFICATION_FROM` accordingly; don't use an old or unverified address.
+- [ ] Verify Veyntis name, trademark and future custom-domain availability before formal brand registration.
+- [ ] Update booking, CRM provider labels and public external links when new URLs are known.
+- [ ] Preserve historical database records, API routes and `aivanta-*` sessionStorage keys unless a migration is justified.
 
-## Smoke tests
-- [ ] Open the homepage on mobile and desktop; verify all anchor links and responsive nav.
-- [ ] Cycle Custom App / CRM / Document system / ERP scenarios in the demo.
-- [ ] Complete the opportunity assessment and verify it populates the contact context.
-- [ ] Submit a test lead and confirm it persists and notifies the configured recipient.
-- [ ] Test the assistant and opportunity brief flow; verify the Veyntis name in replies.
-- [ ] Verify `/status`, `/admin`, privacy and AI-use content.
-- [ ] Validate the SEO title, favicon and Open Graph image on the final domain.
+## End-to-end smoke tests
+- [ ] Load `https://veyntis.vercel.app/` on mobile and desktop, test navigation, accessibility and page layout.
+- [ ] Check `/robots.txt` and `/sitemap.xml` respond with the new hostname.
+- [ ] Verify `/og-image.svg`, favicon and social preview.
+- [ ] Use the interactive Custom App / CRM / DMS / ERP demo.
+- [ ] Complete assessment and ensure its context appears in the contact form.
+- [ ] Submit a controlled test lead; verify storage and notification.
+- [ ] Check chatbot and opportunity brief generation.
+- [ ] Check `/status` and `/admin` as authorized.
 - [ ] Run `npm ci && npm run typecheck && npm test && npm run build`.
 
-## Legal and data
-- The brand has not been independently trademark-cleared.
-- Do not publish employer client names, confidential work or invented performance metrics.
-- Confirm any employment-related conflict of interest and IP ownership before taking clients.
+## Business safeguards
+- Do not claim unverified customer engagements, testimonials or performance numbers.
+- Do not expose employer clients or confidential implementation details.
+- Review employment conflict-of-interest / intellectual-property commitments before client work.

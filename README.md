@@ -1,5 +1,8 @@
 # VEYNTIS
 
+**Website:** https://veyntis.vercel.app/  
+**Repository:** https://github.com/timothynn/Veyntis
+
 **Applied AI & Systems Engineering** · *Intelligence, engineered into your operations.*
 
 Veyntis is an independent engineering studio focused on making existing business software more useful with practical AI. We connect applications, documents, data and workflows through well-scoped, measurable integrations.
@@ -39,7 +42,7 @@ npm run build
 
 ## Rollout
 
-The GitHub repository name, legacy internal storage keys, old deployment URLs and email sender domains remain unchanged until their owner completes a controlled cutover. **Do not rename an in-use API, email sender or production domain blindly.** Follow [the cutover checklist](docs/REBRAND-CHECKLIST.md).
+GitHub repository: `timothynn/Veyntis`. Frontend project: `veyntis`. Public web URL: `https://veyntis.vercel.app/`. The backend project, email sender settings and legacy internal storage keys still require an explicitly verified cutover; historical keys deliberately remain compatible. Follow [the cutover checklist](docs/REBRAND-CHECKLIST.md).
 
 Client examples in this repository are illustrative unless explicitly documented otherwise. No confidential employer or customer implementations are represented.
 

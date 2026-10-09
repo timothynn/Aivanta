@@ -21,7 +21,7 @@ React + Vite keeps the first version fast, simple, portable, and easy to deploy 
 
 ### Hosting
 
-Start with GitHub Pages because the repository is already on GitHub and the site is initially a static marketing experience. Vite documents GitHub Actions deployment for Vite sites, and GitHub Pages supports custom domains.
+Current deployment: Vercel project `veyntis`, at `https://veyntis.vercel.app/`, with a separate Vercel backend project. GitHub Pages workflows are historical/optional and must not be confused with the production Vercel deployment.
 
 Keep the app architecture independent of hosting so it can later move to Vercel, Cloudflare Pages, or another platform without a rewrite.
 
@@ -135,7 +135,7 @@ Keep components small and reusable, but avoid overengineering a one-page marketi
 - Add GitHub Pages Actions workflow
 - Configure repository Pages source to GitHub Actions
 - Verify the production build
-- Add custom domain when the domain is purchased
+- Keep the Vercel hostname updated; add a custom domain if one is purchased
 - Verify HTTPS and redirect behavior
 
 ### Phase 5 — Growth

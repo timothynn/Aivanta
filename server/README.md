@@ -19,7 +19,7 @@ npm run dev
 
 ## Vercel deployment
 
-Create a second Vercel project from the same GitHub repository and set:
+The existing backend is deployed as a separate Vercel project (historically `aivanta-backend`). If you reconnect or recreate it from the renamed GitHub repository, set:
 
 - **Root Directory:** `server`
 - **Framework Preset:** Fastify (or use Vercel's automatic detection)
@@ -31,7 +31,7 @@ The Vercel entrypoint is `server/index.ts`, which exports the Fastify app and on
 Set these environment variables in the API project:
 
 ```text
-API_ORIGIN=https://aivanta-beryl.vercel.app
+API_ORIGIN=https://veyntis.vercel.app
 DATABASE_URL=...
 ADMIN_TOKEN=...
 AI_VENDOR=openai
@@ -46,7 +46,7 @@ LEAD_NOTIFICATION_TO=...
 LEAD_NOTIFICATION_FROM=...
 ```
 
-After deployment, verify:
+After updating `API_ORIGIN` in the backend project's production environment, redeploy that project and verify:
 
 ```text
 https://<api-project>.vercel.app/api/health
