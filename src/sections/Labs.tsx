@@ -11,7 +11,7 @@ export function Labs() {
     <section id="labs" className="labs-section">
       <div className="container">
         <div className="section-heading labs-heading">
-          <p className="eyebrow">AIVANTA LABS</p>
+          <p className="eyebrow">VEYNTIS LABS</p>
           <h2>See what intelligent software can look like.</h2>
           <p>These are illustrative product patterns, not claimed client case studies. They show the kinds of capabilities we can prototype around an existing application.</p>
         </div>

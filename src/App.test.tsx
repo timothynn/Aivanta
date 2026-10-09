@@ -40,15 +40,15 @@ describe('App', () => {
   it('opens the chatbot and sends a message', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
-      json: async () => ({ ok: true, message: { role: 'assistant', content: 'Aivanta supports AI integration.' } }),
+      json: async () => ({ ok: true, message: { role: 'assistant', content: 'Veyntis supports AI integration.' } }),
     } as Response);
 
     render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: /open aivanta assistant chat/i }));
-    expect(screen.getByText('Aivanta Assistant')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /open veyntis assistant chat/i }));
+    expect(screen.getByText('Veyntis Assistant')).toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText('Message Aivanta assistant'), {
+    fireEvent.change(screen.getByLabelText('Message Veyntis assistant'), {
       target: { value: 'Can you help with integrations?' },
     });
     fireEvent.click(screen.getByRole('button', { name: /send message/i }));
@@ -62,6 +62,6 @@ describe('App', () => {
         }),
       );
     });
-    expect(await screen.findByText('Aivanta supports AI integration.')).toBeInTheDocument();
+    expect(await screen.findByText('Veyntis supports AI integration.')).toBeInTheDocument();
   });
 });

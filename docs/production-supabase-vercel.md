@@ -1,9 +1,9 @@
-# Aivanta production setup: Supabase + Vercel
+# Veyntis production setup: Supabase + Vercel
 
-Aivanta is deployed as two Vercel projects from the same repository:
+Veyntis is deployed as two Vercel projects from the same repository:
 
-- **Aivanta Web** — repository root, React/Vite frontend.
-- **Aivanta Backend** — `server/` root directory, Fastify API.
+- **Veyntis Web** — repository root, React/Vite frontend.
+- **Veyntis Backend** — `server/` root directory, Fastify API.
 
 ## 1. Supabase
 
@@ -19,7 +19,7 @@ server/migrations/002_opportunity_briefs.sql
 server/migrations/003_lead_qualification.sql
 ```
 
-## 2. Aivanta Backend Vercel project
+## 2. Veyntis Backend Vercel project
 
 Project: `aivanta-backend`
 
@@ -52,9 +52,9 @@ LEAD_NOTIFICATION_FROM=<verified sender>
 
 Only the variables needed for enabled integrations need to be set.
 
-## 3. Aivanta Web Vercel project
+## 3. Veyntis Web Vercel project
 
-Project: existing Aivanta frontend.
+Project: existing Veyntis frontend.
 
 Add:
 

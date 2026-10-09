@@ -1,6 +1,6 @@
-# Aivanta API
+# Veyntis API
 
-Fastify backend for the Aivanta website.
+Fastify backend for the Veyntis website.
 
 ## Local development
 
@@ -55,7 +55,7 @@ https://<api-project>.vercel.app/api/health
 Expected response:
 
 ```json
-{"ok":true,"service":"aivanta-api"}
+{"ok":true,"service":"veyntis-api"}
 ```
 
 Then set the frontend project's `VITE_API_BASE_URL` to the API project's production URL and redeploy the frontend.

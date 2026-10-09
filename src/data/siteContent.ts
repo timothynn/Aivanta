@@ -60,35 +60,23 @@ export const iconMap: Record<IconName, LucideIcon> = {
 
 export const services = [
   {
-    number: '01',
-    title: 'AI Application Assessment',
-    body: 'Evaluate systems, data, and workflows to identify the highest-value AI opportunities.',
-    icon: 'search',
+    "number": "01",
+    "title": "AI Integration",
+    "body": "Add practical AI capabilities to your existing applications, APIs and data—without replacing the systems that already work.",
+    "icon": "layers"
   },
   {
-    number: '02',
-    title: 'AI Integration',
-    body: 'Integrate practical AI capabilities into the applications and infrastructure already in use.',
-    icon: 'layers',
+    "number": "02",
+    "title": "Workflow Intelligence",
+    "body": "Automate repetitive work with scoped agents, human approvals and measurable operational improvements.",
+    "icon": "workflow"
   },
   {
-    number: '03',
-    title: 'Agentic Workflows',
-    body: 'Build AI agents that can reason, act, and assist across real business workflows.',
-    icon: 'bot',
-  },
-  {
-    number: '04',
-    title: 'Document & Knowledge Intelligence',
-    body: 'Turn documents and knowledge into searchable, context-aware business systems.',
-    icon: 'document',
-  },
-  {
-    number: '05',
-    title: 'AI Modernization',
-    body: 'Evolve legacy applications into AI-enabled platforms with practical governance.',
-    icon: 'chart',
-  },
+    "number": "03",
+    "title": "Knowledge Systems",
+    "body": "Turn scattered documents and business knowledge into searchable, grounded answers and useful experiences.",
+    "icon": "document"
+  }
 ] as const;
 
 export const processSteps = [

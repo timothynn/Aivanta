@@ -24,7 +24,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   const recordAnalytics = analyticsStore ? createAnalytics(analyticsStore) : null;
 
   await app.register(cors, { origin: config.apiOrigin, methods: ['GET', 'POST', 'PATCH'] });
-  app.get('/api/health', async () => ({ ok: true, service: 'aivanta-api' }));
+  app.get('/api/health', async () => ({ ok: true, service: 'veyntis-api' }));
 
   app.post('/api/events', { preHandler: createRateLimit(60, 60_000) }, async (request, reply) => {
     if (!recordAnalytics) return reply.code(204).send();
@@ -34,7 +34,7 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
 
   app.post('/api/chat', { preHandler: createRateLimit(30, 60_000) }, async (request, reply) => {
     try { const result = await sendChatMessage(request.body); return reply.send({ ok: true, message: result.message }); }
-    catch (error) { if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please enter a message and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) }); request.log.error(error); return reply.code(502).send({ ok: false, message: 'The assistant is unavailable right now. Please use the contact form and Aivanta will follow up.' }); }
+    catch (error) { if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please enter a message and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) }); request.log.error(error); return reply.code(502).send({ ok: false, message: 'The assistant is unavailable right now. Please use the contact form and Veyntis will follow up.' }); }
   });
 
   app.post('/api/opportunity-brief', { preHandler: createRateLimit(10, 60_000) }, async (request, reply) => {

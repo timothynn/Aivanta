@@ -1,4 +1,4 @@
-# Aivanta backend deployment
+# Veyntis backend deployment
 
 ## Current architecture
 

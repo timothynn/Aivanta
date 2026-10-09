@@ -2,7 +2,7 @@ import { FormEvent, useRef, useState } from 'react';
 import { Bot, MessageCircle, Send, Sparkles, X } from 'lucide-react';
 import { generateOpportunityBrief, sendChatMessage, trackEvent, type ChatMessage, type OpportunityBrief } from '../api/client';
 
-const initialMessages: ChatMessage[] = [{ role: 'assistant', content: 'Hi, I’m the Aivanta assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.' }];
+const initialMessages: ChatMessage[] = [{ role: 'assistant', content: 'Hi, I’m the Veyntis assistant. I can help you explore practical AI opportunities for the software, data, documents, and workflows your business already uses.' }];
 const quickPrompts = ['How can AI improve my existing application?', 'What does an AI transformation project look like?', 'Can you help me identify an AI use case?', 'What is an AI transformation assessment?'];
 
 export function Chatbot() {
@@ -70,8 +70,8 @@ export function Chatbot() {
   return (
     <div className="chatbot">
       {open ? (
-        <section aria-label="Aivanta assistant chat" className="chat-window">
-          <header className="chat-header"><div className="chat-title"><span className="chat-avatar"><Bot aria-hidden="true" size={19} /></span><div><h2>Aivanta Assistant</h2><p>AI transformation guide</p></div></div><button aria-label="Close chat" className="chat-icon-button" onClick={() => setOpen(false)} type="button"><X aria-hidden="true" size={18} /></button></header>
+        <section aria-label="Veyntis assistant chat" className="chat-window">
+          <header className="chat-header"><div className="chat-title"><span className="chat-avatar"><Bot aria-hidden="true" size={19} /></span><div><h2>Veyntis Assistant</h2><p>AI transformation guide</p></div></div><button aria-label="Close chat" className="chat-icon-button" onClick={() => setOpen(false)} type="button"><X aria-hidden="true" size={18} /></button></header>
           <div aria-live="polite" className="chat-messages">
             {messages.map((message, index) => <div className={`chat-message chat-message--${message.role}`} key={`${message.role}-${index}`}>{message.content}</div>)}
             {sending ? <div className="chat-message chat-message--assistant chat-thinking"><Sparkles aria-hidden="true" size={14} /> Thinking through the use case…</div> : null}
@@ -84,10 +84,10 @@ export function Chatbot() {
           {brief ? <div className="chat-brief-card"><div><span>AI OPPORTUNITY BRIEF</span><h3>{brief.recommendedStart}</h3></div><p>{brief.summary}</p><div className="chat-brief-grid"><div><small>Existing system</small><strong>{brief.system}</strong></div><div><small>Main pain point</small><strong>{brief.painPoint}</strong></div><div><small>Data sources</small><strong>{brief.dataSources}</strong></div><div><small>Users</small><strong>{brief.users}</strong></div></div><div className="chat-brief-list"><div><small>Potential opportunities</small><ul>{brief.opportunities.map((item) => <li key={item}>{item}</li>)}</ul></div><div><small>Key considerations</small><ul>{brief.considerations.map((item) => <li key={item}>{item}</li>)}</ul></div></div><button className="button button--primary" onClick={continueToContact} type="button">Carry this into a consultation <Send size={15} /></button></div> : null}
 
           {error ? <p className="chat-error" role="alert">{error}</p> : null}
-          <form className="chat-form" onSubmit={handleSubmit}><label className="sr-only" htmlFor="chat-message">Message Aivanta assistant</label><input autoComplete="off" id="chat-message" onChange={(event) => setDraft(event.target.value)} placeholder="Tell me about your application…" ref={inputRef} value={draft} /><button aria-label="Send message" className="chat-send" disabled={sending || briefing || !draft.trim()} type="submit"><Send aria-hidden="true" size={17} /></button></form>
+          <form className="chat-form" onSubmit={handleSubmit}><label className="sr-only" htmlFor="chat-message">Message Veyntis assistant</label><input autoComplete="off" id="chat-message" onChange={(event) => setDraft(event.target.value)} placeholder="Tell me about your application…" ref={inputRef} value={draft} /><button aria-label="Send message" className="chat-send" disabled={sending || briefing || !draft.trim()} type="submit"><Send aria-hidden="true" size={17} /></button></form>
         </section>
       ) : null}
-      <button aria-label="Open Aivanta assistant chat" className="chat-pill" onClick={openChat} type="button"><MessageCircle aria-hidden="true" size={19} /><span>Ask Aivanta</span></button>
+      <button aria-label="Open Veyntis assistant chat" className="chat-pill" onClick={openChat} type="button"><MessageCircle aria-hidden="true" size={19} /><span>Ask Veyntis</span></button>
     </div>
   );
 }

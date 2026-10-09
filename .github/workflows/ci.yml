@@ -1,4 +1,4 @@
-name: Aivanta CI
+name: Veyntis CI
 
 on:
   push:
