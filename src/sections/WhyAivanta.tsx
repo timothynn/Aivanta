@@ -6,7 +6,7 @@ export function WhyAivanta() {
     <section className="section why">
       <div className="container">
         <div className="why-heading">
-          <h2>Why Aivanta</h2>
+          <h2>Why Veyntis</h2>
         </div>
         <div className="why-grid">
           {whyAivanta.map(([title, text]) => (

@@ -13,7 +13,7 @@ export function Assessment() {
   const canContinue = [answers.system, answers.goal, answers.data, answers.priority][step] !== '';
   const result = useMemo(() => ({
     title: answers.priority === 'Pilot one workflow' ? 'A focused AI pilot' : 'An AI transformation assessment',
-    body: answers.system ? `For a ${answers.system.toLowerCase()}, Aivanta would start by mapping where ${answers.goal.toLowerCase()} can be improved using your existing ${answers.data.toLowerCase()}.` : 'Aivanta starts with your existing application, data, documents, and workflows rather than a platform rewrite.',
+    body: answers.system ? `For a ${answers.system.toLowerCase()}, Veyntis would start by mapping where ${answers.goal.toLowerCase()} can be improved using your existing ${answers.data.toLowerCase()}.` : 'Veyntis starts with your existing application, data, documents, and workflows rather than a platform rewrite.',
   }), [answers]);
 
   function choose(value: string) {

@@ -59,7 +59,7 @@ export function TransformationDemo() {
           <p className="eyebrow">SEE THE TRANSFORMATION</p>
           <h2>Start with the software you already have.</h2>
           <p>
-            Pick a common enterprise system and see the kinds of AI capabilities Aivanta can layer into the
+            Pick a common enterprise system and see the kinds of AI capabilities Veyntis can layer into the
             application without replacing its core data and workflows.
           </p>
         </div>

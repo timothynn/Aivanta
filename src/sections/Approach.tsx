@@ -5,7 +5,7 @@ export function Approach() {
     <section id="approach" className="section section--approach">
       <div className="container">
         <div className="section-heading centered">
-          <p className="eyebrow">How Aivanta Works</p>
+          <p className="eyebrow">How Veyntis Works</p>
         </div>
         <div className="process-grid">
           {processSteps.map(([number, title, text], index) => (

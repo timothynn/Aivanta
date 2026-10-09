@@ -16,7 +16,7 @@ export function Integrations() {
         <div className="integrations-copy">
           <p className="eyebrow">INTEGRATION-FIRST</p>
           <h2>You do not need to replace the software that already works.</h2>
-          <p>Aivanta is designed to add an intelligence layer around existing applications, data, documents, and workflows. The goal is practical modernization, not a forced rewrite.</p>
+          <p>Veyntis is designed to add an intelligence layer around existing applications, data, documents, and workflows. The goal is practical modernization, not a forced rewrite.</p>
         </div>
         <div className="integration-grid integration-grid--large">
           {integrationItems.map(([title, description, ItemIcon]) => (
