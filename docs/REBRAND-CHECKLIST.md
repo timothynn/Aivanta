@@ -44,3 +44,16 @@
 - Do not claim unverified customer engagements, testimonials or performance numbers.
 - Do not expose employer clients or confidential implementation details.
 - Review employment conflict-of-interest / intellectual-property commitments before client work.
+
+## API explorer and realistic launch checks
+
+- [x] Added an API overview at backend `/` and OpenAPI 3 description at `/openapi.json`.
+- [x] Added Swagger-style `/docs` API explorer; its frontend assets are CDN-hosted with direct JSON fallback.
+- [x] Added a candid About the Studio section rather than presenting hypothetical projects as previous clients.
+- [ ] Verify backend Vercel Root Directory is `server` and Fastify entrypoint is detected correctly.
+- [ ] Verify public backend routes `/`, `/docs`, `/openapi.json`, `/api/health` respond on production hostname.
+- [ ] Confirm backend `DATABASE_URL` is configured for the ACTIVE_HEALTHY Veyntis Supabase project, and `VITE_API_BASE_URL` points to `https://veyntis-backend.vercel.app`.
+- [ ] Confirm contact email deliverability (verified sender and recipient) and successfully persist a consenting, controlled test enquiry.
+- [ ] Replace generic copy with actual documented deliverables, a founder/team introduction, a real contact method, an enquiry response SLA, and approved case studies as earned.
+- [ ] Publish full data protection/privacy terms describing controller identity, retention periods, vendors and enquiry rights before accepting sensitive business enquiries.
+- [ ] Fix GitHub Actions runner initialization before relying on CI; Vercel checks confirm deployments, not test suite results.
