@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Icon } from '../components/Icon';
 import { submitLead, trackEvent, type LeadPayload, type OpportunityBrief } from '../api/client';
 
@@ -22,8 +22,32 @@ export function Contact() {
     }
     return initialForm;
   });
-  const [assessmentContext] = useState<AssessmentContext | null>(() => (typeof window !== 'undefined' ? loadAssessmentContext() : null));
-  const [chatContext] = useState<ChatContext | null>(() => (typeof window !== 'undefined' ? loadChatContext() : null));
+  const [assessmentContext, setAssessmentContext] = useState<AssessmentContext | null>(() => (typeof window !== 'undefined' ? loadAssessmentContext() : null));
+  const [chatContext, setChatContext] = useState<ChatContext | null>(() => (typeof window !== 'undefined' ? loadChatContext() : null));
+  useEffect(() => {
+    // sessionStorage 'storage' events do not fire for changes in the same tab.
+    const syncContexts = () => {
+      const assessment = loadAssessmentContext();
+      const chat = loadChatContext();
+      setAssessmentContext(assessment);
+      setChatContext(chat);
+      setForm((current) => {
+        if (chat) {
+          const brief = chat.brief;
+          const briefText = brief
+            ? `\n\nAI Opportunity Brief:\nRecommended start: ${brief.recommendedStart}\nSystem: ${brief.system}\nUsers: ${brief.users}\nPain point: ${brief.painPoint}\nData sources: ${brief.dataSources}\nOpportunities: ${brief.opportunities.join(', ')}\nConsiderations: ${brief.considerations.join(', ')}`
+            : '';
+          return { ...current, goals: ['Assessment'], source: 'homepage_chat_discovery',
+            message: `Veyntis Assistant discovery conversation:\n\n${chat.conversation}${briefText}\n\nWhat I would like Veyntis to help with: ` };
+        }
+        if (assessment) return { ...current, goals: ['Assessment'], source: 'homepage_assessment',
+          message: `Assessment context:\nSystem: ${assessment.system}\nPrimary goal: ${assessment.goal}\nAvailable information: ${assessment.data}\nPreferred next step: ${assessment.priority}\n\nWhat I would like Veyntis to improve: ` };
+        return current;
+      });
+    };
+    window.addEventListener('veyntis:context-updated', syncContexts);
+    return () => window.removeEventListener('veyntis:context-updated', syncContexts);
+  }, []);
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -37,6 +61,7 @@ export function Contact() {
       const payload = chatContext?.brief ? { ...form, opportunityBrief: chatContext.brief } : form;
       await submitLead(payload);
       sessionStorage.removeItem('aivanta-assessment'); sessionStorage.removeItem('aivanta-chat-context'); sessionStorage.removeItem('aivanta-opportunity-brief');
+      setAssessmentContext(null); setChatContext(null);
       void trackEvent('lead_submitted', { source: form.source, industry: form.industry || 'unspecified' });
       setForm(initialForm); setSubmissionState('success');
     } catch (error) { setSubmissionState('error'); setErrorMessage(error instanceof Error ? error.message : 'Unable to submit the request. Please try again.'); }

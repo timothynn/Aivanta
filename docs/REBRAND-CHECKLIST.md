@@ -11,11 +11,22 @@
 - [ ] Set the **existing backend** project environment variable `API_ORIGIN=https://veyntis.vercel.app` for production (and appropriate preview origins if needed); redeploy backend.
 - [ ] Confirm that frontend `VITE_API_BASE_URL` is still pointing at the existing backend project URL; only change it if backend URL changes. Redeploy frontend after a change.
 - [ ] Confirm Vercel frontend/backend Git integration still tracks `timothynn/Veyntis` after GitHub rename.
-- [ ] Keep the backend hostname until verified; the frontend rename does not automatically rename its separate backend.
+- [x] The two Vercel projects are now named `veyntis` and `veyntis-backend` (confirmed via Vercel project listing).
+- [ ] Check that `VITE_API_BASE_URL` points to the actual backend hostname, expected `https://veyntis-backend.vercel.app`, and redeploy frontend if adjusted.
 - [ ] Verify a sending domain and set `LEAD_NOTIFICATION_FROM` accordingly; don't use an old or unverified address.
 - [ ] Verify Veyntis name, trademark and future custom-domain availability before formal brand registration.
 - [ ] Update booking, CRM provider labels and public external links when new URLs are known.
 - [ ] Preserve historical database records, API routes and `aivanta-*` sessionStorage keys unless a migration is justified.
+
+## Additional production audit — 2026-10-09
+- [ ] Confirm `DATABASE_URL` points to an active and migrated database. The connected Supabase project named `aivanta` currently reports `INACTIVE`.
+- [x] Fix same-tab assessment/chat → contact handoff.
+- [x] Make demo capability selection interactive.
+- [x] Refuse serverless lead submissions without a persistent database instead of acknowledging transient storage.
+- [x] Prevent failed email notifications from causing a false failure after a lead has been stored.
+- [x] Disable redundant automatic GitHub Pages deploy workflow (Vercel remains production).
+- [ ] Diagnose GitHub Actions jobs failing before any runner steps; this may require GitHub account/repository settings.
+- [ ] Verify end-to-end lead intake, persistent storage, email notifications and Vite frontend API base URL.
 
 ## End-to-end smoke tests
 - [ ] Load `https://veyntis.vercel.app/` on mobile and desktop, test navigation, accessibility and page layout.

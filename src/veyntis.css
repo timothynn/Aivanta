@@ -110,3 +110,7 @@ h1,h2,h3,h4,.brand-wordmark{font-family:Manrope,Inter,system-ui,sans-serif}
 @media(max-width:680px){.container{width:calc(100% - 34px)}.vy-hero-inner{padding:61px 0 42px}.vy-hero h1{font-size:clamp(34px,9vw,47px)}.vy-hero .hero-subcopy{font-size:14px}.vy-system{margin-top:40px}.vy-system-flow{grid-template-columns:1fr}.vy-flow-arrow{transform:rotate(90deg);line-height:1}.vy-system-node{min-height:0;padding:20px}.vy-system-head{font-size:8px}.vy-system-state{display:none}.vy-system-foot{font-size:9px;flex-wrap:wrap;gap:7px}.vy-split-heading{grid-template-columns:1fr;gap:14px}.service-grid,.engagement-grid,.vy-principles-grid{grid-template-columns:1fr}.service-card{min-height:0}.vy-industries .industry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vy-proof-note{align-items:flex-start;flex-wrap:wrap}.vy-proof-note p{flex:1 1 calc(100% - 50px)}.vy-proof-note a{margin-left:38px}.vy-footer-top{flex-direction:column;padding:40px 0 28px}.vy-footer-links{gap:16px}.footer-bottom{flex-direction:column;gap:10px}.nav-wrap{height:70px}}
 @media(max-width:410px){.vy-industries .industry-grid{grid-template-columns:1fr}.vy-footer-links{gap:12px}.vy-hero .button{width:100%}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Active capability selection in the interactive transformation demo */
+.demo-capability.is-selected{border-color:#369b73;background:#eaf7ee;box-shadow:0 0 0 2px #72d7ac33}
+.demo-capability.is-selected strong{color:#146649}

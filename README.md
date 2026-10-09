@@ -42,7 +42,7 @@ npm run build
 
 ## Rollout
 
-GitHub repository: `timothynn/Veyntis`. Frontend project: `veyntis`. Public web URL: `https://veyntis.vercel.app/`. The backend project, email sender settings and legacy internal storage keys still require an explicitly verified cutover; historical keys deliberately remain compatible. Follow [the cutover checklist](docs/REBRAND-CHECKLIST.md).
+GitHub repository: `timothynn/Veyntis`. Frontend project: `veyntis`. Public web URL: `https://veyntis.vercel.app/`. The backend project is named `veyntis-backend`; its frontend-facing `VITE_API_BASE_URL`, active database configuration, verified email sender and legacy internal storage keys still require explicit verification; historical keys deliberately remain compatible. Follow [the cutover checklist](docs/REBRAND-CHECKLIST.md).
 
 Client examples in this repository are illustrative unless explicitly documented otherwise. No confidential employer or customer implementations are represented.
 

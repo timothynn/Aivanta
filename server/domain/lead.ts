@@ -54,7 +54,13 @@ export function createLeadIntake(store: LeadStore, notifier: LeadNotifier, crm?:
   return async function submitLead(input: unknown): Promise<LeadIntakeResult> {
     const submission = leadSubmissionSchema.parse(input);
     const lead = await store.createLead(submission);
-    await notifier.notifyLeadCreated(lead);
+    try {
+      await notifier.notifyLeadCreated(lead);
+    } catch (error) {
+      // A notification error must not turn a persisted lead into a failed
+      // browser submission and encourage the visitor to submit a duplicate.
+      console.warn('Lead notification failed after persistence.', { leadId: lead.id, error });
+    }
     if (crm) {
       try {
         await crm.syncLead(lead);
