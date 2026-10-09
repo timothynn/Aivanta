@@ -11,7 +11,8 @@
 - [ ] Set the **existing backend** project environment variable `API_ORIGIN=https://veyntis.vercel.app` for production (and appropriate preview origins if needed); redeploy backend.
 - [ ] Confirm that frontend `VITE_API_BASE_URL` is still pointing at the existing backend project URL; only change it if backend URL changes. Redeploy frontend after a change.
 - [ ] Confirm Vercel frontend/backend Git integration still tracks `timothynn/Veyntis` after GitHub rename.
-- [ ] Keep the backend hostname until verified; the frontend rename does not automatically rename its separate backend.
+- [x] The two Vercel projects are now named `veyntis` and `veyntis-backend` (confirmed via Vercel project listing).
+- [ ] Check that `VITE_API_BASE_URL` points to the actual backend hostname, expected `https://veyntis-backend.vercel.app`, and redeploy frontend if adjusted.
 - [ ] Verify a sending domain and set `LEAD_NOTIFICATION_FROM` accordingly; don't use an old or unverified address.
 - [ ] Verify Veyntis name, trademark and future custom-domain availability before formal brand registration.
 - [ ] Update booking, CRM provider labels and public external links when new URLs are known.

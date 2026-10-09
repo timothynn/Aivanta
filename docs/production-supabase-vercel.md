@@ -21,7 +21,7 @@ server/migrations/003_lead_qualification.sql
 
 ## 2. Veyntis Backend Vercel project
 
-Project: `aivanta-backend` (existing backend name; not part of the frontend rename)
+Project: `veyntis-backend` (backend project, independently deployed from `veyntis`)
 
 Root Directory:
 
@@ -59,7 +59,7 @@ Project: `veyntis` (frontend, linked to `timothynn/Veyntis`).
 Add:
 
 ```text
-VITE_API_BASE_URL=https://aivanta-backend.vercel.app
+VITE_API_BASE_URL=https://veyntis-backend.vercel.app
 ```
 
 Redeploy the frontend after changing the variable.

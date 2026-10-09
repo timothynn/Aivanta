@@ -19,7 +19,7 @@ npm run dev
 
 ## Vercel deployment
 
-The existing backend is deployed as a separate Vercel project (historically `aivanta-backend`). If you reconnect or recreate it from the renamed GitHub repository, set:
+The backend is deployed as the separate Vercel project `veyntis-backend` (formerly `aivanta-backend`). If you reconnect or recreate it from the renamed GitHub repository, set:
 
 - **Root Directory:** `server`
 - **Framework Preset:** Fastify (or use Vercel's automatic detection)
