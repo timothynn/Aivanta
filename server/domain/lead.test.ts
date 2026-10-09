@@ -31,6 +31,21 @@ describe('createLeadIntake', () => {
     expect(notifier.notifyLeadCreated).toHaveBeenCalledWith(store.leads[0]);
   });
 
+  it('acknowledges a stored lead even if the notifier fails', async () => {
+    const store = new InMemoryLeadStore();
+    const notifier: LeadNotifier = { notifyLeadCreated: vi.fn().mockRejectedValue(new Error('email service offline')) };
+    const warning = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      const submitLead = createLeadIntake(store, notifier);
+      const result = await submitLead(validSubmission);
+      expect(result.leadId).toBe(store.leads[0].id);
+      expect(store.leads).toHaveLength(1);
+      expect(warning).toHaveBeenCalled();
+    } finally {
+      warning.mockRestore();
+    }
+  });
+
   it('rejects invalid lead data before storing anything', async () => {
     const store = new InMemoryLeadStore();
     const notifier: LeadNotifier = {

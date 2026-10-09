@@ -1,8 +1,7 @@
 name: Deploy Veyntis
 
+# Vercel deploys production on push. GitHub Pages is an optional manual fallback.
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -22,9 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
       - name: Setup Node
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm

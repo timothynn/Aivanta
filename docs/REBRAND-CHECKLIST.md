@@ -17,6 +17,16 @@
 - [ ] Update booking, CRM provider labels and public external links when new URLs are known.
 - [ ] Preserve historical database records, API routes and `aivanta-*` sessionStorage keys unless a migration is justified.
 
+## Additional production audit — 2026-10-09
+- [ ] Confirm `DATABASE_URL` points to an active and migrated database. The connected Supabase project named `aivanta` currently reports `INACTIVE`.
+- [x] Fix same-tab assessment/chat → contact handoff.
+- [x] Make demo capability selection interactive.
+- [x] Refuse serverless lead submissions without a persistent database instead of acknowledging transient storage.
+- [x] Prevent failed email notifications from causing a false failure after a lead has been stored.
+- [x] Disable redundant automatic GitHub Pages deploy workflow (Vercel remains production).
+- [ ] Diagnose GitHub Actions jobs failing before any runner steps; this may require GitHub account/repository settings.
+- [ ] Verify end-to-end lead intake, persistent storage, email notifications and Vite frontend API base URL.
+
 ## End-to-end smoke tests
 - [ ] Load `https://veyntis.vercel.app/` on mobile and desktop, test navigation, accessibility and page layout.
 - [ ] Check `/robots.txt` and `/sitemap.xml` respond with the new hostname.

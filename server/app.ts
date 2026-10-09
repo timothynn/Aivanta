@@ -46,6 +46,10 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   });
 
   app.post('/api/leads', { preHandler: createRateLimit(12, 60_000) }, async (request, reply) => {
+    // Ephemeral in-memory state must not be acknowledged as saved on Vercel.
+    if (process.env.VERCEL === '1' && !config.databaseUrl) {
+      return reply.code(503).send({ ok: false, message: 'Enquiries are temporarily unavailable. Please try again later.' });
+    }
     try { const result = await submitLead(request.body); return reply.code(201).send({ ok: true, leadId: result.leadId }); }
     catch (error) { if (error instanceof ZodError) return reply.code(400).send({ ok: false, message: 'Please check the form and try again.', issues: error.issues.map((issue) => ({ path: issue.path.join('.'), message: issue.message })) }); request.log.error(error); return reply.code(500).send({ ok: false, message: 'Unable to submit the request right now.' }); }
   });

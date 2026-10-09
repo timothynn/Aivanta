@@ -76,6 +76,22 @@ describe('createApp', () => {
     await app.close();
   });
 
+  it('rejects non-durable lead intake when running on Vercel', async () => {
+    vi.stubEnv('VERCEL', '1');
+    const app = await createApp({
+      config, chatAssistant: createChatAssistant(),
+      leadStore: new InMemoryLeadStore(),
+      leadNotifier: { notifyLeadCreated: vi.fn().mockResolvedValue(undefined) },
+    });
+    try {
+      const response = await app.inject({ method: 'POST', url: '/api/leads', payload: validBody });
+      expect(response.statusCode).toBe(503);
+    } finally {
+      await app.close();
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('accepts valid lead submissions', async () => {
     const store = new InMemoryLeadStore();
     const notifier: LeadNotifier = {
