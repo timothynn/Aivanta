@@ -49,7 +49,7 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     crmWebhookSecret: env.CRM_WEBHOOK_SECRET,
     resendApiKey: env.RESEND_API_KEY,
     leadNotificationTo: env.LEAD_NOTIFICATION_TO,
-    leadNotificationFrom: env.LEAD_NOTIFICATION_FROM ?? 'Veyntis <hello@aivanta.ai>',
+    leadNotificationFrom: env.LEAD_NOTIFICATION_FROM ?? 'Veyntis <hello@example.com>',
     port: Number(env.PORT ?? 8787),
   };
 }

@@ -9,8 +9,11 @@ const config: AppConfig = {
   apiOrigin: 'http://localhost:5173',
   aiVendor: 'local',
   aiModel: '',
+  retrievalMode: 'keyword',
+  embeddingModel: 'text-embedding-3-small',
+  crmProvider: 'none',
   geminiModel: 'gemini-2.0-flash',
-  leadNotificationFrom: 'Veyntis <hello@aivanta.ai>',
+  leadNotificationFrom: 'Veyntis <hello@example.com>',
   openaiModel: 'gpt-5',
   port: 8787,
 };
@@ -46,7 +49,31 @@ describe('createApp', () => {
     await app.close();
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ ok: true });
+    expect(response.json()).toEqual({ ok: true, service: 'veyntis-api' });
+  });
+
+  it('allows requests from the Veyntis frontend without allowing arbitrary origins', async () => {
+    const app = await createApp({
+      config,
+      chatAssistant: createChatAssistant(),
+      leadStore: new InMemoryLeadStore(),
+      leadNotifier: { notifyLeadCreated: vi.fn().mockResolvedValue(undefined) },
+    });
+
+    const accepted = await app.inject({
+      method: 'OPTIONS',
+      url: '/api/leads',
+      headers: { origin: 'https://veyntis.vercel.app', 'access-control-request-method': 'POST' },
+    });
+    expect(accepted.headers['access-control-allow-origin']).toBe('https://veyntis.vercel.app');
+
+    const rejected = await app.inject({
+      method: 'OPTIONS',
+      url: '/api/leads',
+      headers: { origin: 'https://untrusted.example', 'access-control-request-method': 'POST' },
+    });
+    expect(rejected.headers['access-control-allow-origin']).toBeUndefined();
+    await app.close();
   });
 
   it('accepts valid lead submissions', async () => {

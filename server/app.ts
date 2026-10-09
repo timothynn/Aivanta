@@ -23,7 +23,10 @@ export async function createApp({ config, chatAssistant, leadStore, leadNotifier
   const submitLead = createLeadIntake(leadStore, leadNotifier, crm);
   const recordAnalytics = analyticsStore ? createAnalytics(analyticsStore) : null;
 
-  await app.register(cors, { origin: config.apiOrigin, methods: ['GET', 'POST', 'PATCH'] });
+  // Permit the new public frontend during the domain cutover while respecting the
+  // configured origin for existing deployments and local development.
+  const allowedOrigins = [...new Set([config.apiOrigin, 'https://veyntis.vercel.app'])];
+  await app.register(cors, { origin: allowedOrigins, methods: ['GET', 'POST', 'PATCH'] });
   app.get('/api/health', async () => ({ ok: true, service: 'veyntis-api' }));
 
   app.post('/api/events', { preHandler: createRateLimit(60, 60_000) }, async (request, reply) => {
